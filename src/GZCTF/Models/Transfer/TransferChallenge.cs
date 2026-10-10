@@ -48,9 +48,9 @@ public class TransferChallenge : IValidatableObject
     public bool Enabled { get; set; }
 
     /// <summary>
-    /// Whether AI may participate in solving the challenge. Older imports default to allowed.
+    /// Whether AI may participate in solving the challenge. Older imports default to disallowed.
     /// </summary>
-    public bool AllowAI { get; set; } = true;
+    public bool AllowAI { get; set; }
 
     /// <summary>
     /// Scoring configuration

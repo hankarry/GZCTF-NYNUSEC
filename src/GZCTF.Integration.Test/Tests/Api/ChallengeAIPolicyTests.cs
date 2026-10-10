@@ -34,13 +34,27 @@ public class ChallengeAIPolicyTests(GZCTFApplicationFactory factory)
         (await playerClient.PostAsJsonAsync("/api/account/login",
             new LoginModel { UserName = player.UserName, Password = password })).EnsureSuccessStatusCode();
 
+        var createdResponse = await adminClient.PostAsJsonAsync($"/api/edit/games/{game.Id}/challenges",
+            new ChallengeInfoModel { Title = "New policy challenge" });
+        createdResponse.EnsureSuccessStatusCode();
+        Assert.False((await createdResponse.Content.ReadFromJsonAsync<ChallengeEditDetailModel>())!.AllowAI);
+
         var editUrl = $"/api/edit/games/{game.Id}/challenges/{challenge.Id}";
         var playerUrl = $"/api/game/{game.Id}/challenges/{challenge.Id}";
+        await AssertPolicy(false);
+
+        // Begin with an existing challenge that explicitly allows AI, then disable it.
+        (await adminClient.PutAsJsonAsync(editUrl, new { allowAI = true })).EnsureSuccessStatusCode();
         await AssertPolicy(true);
 
-        var response = await adminClient.PutAsJsonAsync(editUrl, new { allowAI = false });
+        var response = await adminClient.PutAsJsonAsync(editUrl, new
+        {
+            title = "Updated policy challenge", allowAI = false, difficultyLevel = ChallengeDifficulty.Hard
+        });
         response.EnsureSuccessStatusCode();
-        Assert.False((await response.Content.ReadFromJsonAsync<ChallengeEditDetailModel>())!.AllowAI);
+        var updated = (await response.Content.ReadFromJsonAsync<ChallengeEditDetailModel>())!;
+        Assert.False(updated.AllowAI);
+        Assert.Equal(ChallengeDifficulty.Hard, updated.DifficultyLevel);
         await AssertPolicy(false);
 
         // Releasing a hint must not reset the challenge's AI policy.
@@ -63,6 +77,8 @@ public class ChallengeAIPolicyTests(GZCTFApplicationFactory factory)
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var persisted = await db.GameChallenges.AsNoTracking().SingleAsync(c => c.Id == challenge.Id);
             Assert.Equal(expected, persisted.AllowAI);
+            if (persisted.Title == "Updated policy challenge")
+                Assert.Equal(ChallengeDifficulty.Hard, persisted.DifficultyLevel);
         }
     }
 }

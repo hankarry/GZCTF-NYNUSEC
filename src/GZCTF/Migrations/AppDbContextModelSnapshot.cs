@@ -591,7 +591,7 @@ namespace GZCTF.Migrations
                     b.Property<bool>("AllowAI")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(false);
 
                     b.Property<int?>("AttachmentId")
                         .HasColumnType("integer");

@@ -40,7 +40,7 @@ public class ChallengeDetailModel
     /// <summary>
     /// Whether AI may participate in solving the challenge
     /// </summary>
-    public bool AllowAI { get; set; } = true;
+    public bool AllowAI { get; set; }
 
     /// <summary>
     /// Current score of the challenge

@@ -442,10 +442,13 @@ const GameChallengeEdit: FC = () => {
                 </Text>
                 <Switch
                   disabled={disabled}
-                  checked={challengeInfo.allowAI ?? true}
+                  checked={challengeInfo.allowAI ?? false}
                   label={t('admin.content.games.challenges.ai_policy.label')}
                   description={t('admin.content.games.challenges.ai_policy.description')}
-                  onChange={(e) => setChallengeInfo({ ...challengeInfo, allowAI: e.target.checked })}
+                  onChange={(e) => {
+                    const allowAI = e.currentTarget.checked
+                    setChallengeInfo((previous) => ({ ...previous, allowAI }))
+                  }}
                 />
               </Stack>
             </Stack>
@@ -673,7 +676,7 @@ const GameChallengeEdit: FC = () => {
         challenge={{
           title: tryDefault([challengeInfo?.title, challenge?.title], ''),
           content: tryDefault([challengeInfo?.content, challenge?.content]),
-          allowAI: challengeInfo.allowAI ?? challenge?.allowAI ?? true,
+          allowAI: challengeInfo.allowAI ?? challenge?.allowAI ?? false,
           hints: (challengeInfo?.hints ?? []).filter(
             (hint, index) => challengeInfo.hintEnabled?.[index] && hint.trim()
           ),

@@ -251,7 +251,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) :
         builder.Entity<GameChallenge>(entity =>
         {
             entity.Property(e => e.AllowAI)
-                .HasDefaultValue(true);
+                .HasDefaultValue(false);
 
             entity.Property(e => e.Hints)
                 .HasConversion(listConverter)
