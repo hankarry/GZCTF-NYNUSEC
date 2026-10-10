@@ -5,8 +5,8 @@ import banner from 'vite-plugin-banner'
 import { optimizeCssModules } from 'vite-plugin-optimize-css-modules'
 import Pages from 'vite-plugin-pages'
 import webfontDownload from 'vite-plugin-webfont-dl'
-import { fetchContributors } from './plugins/vite-fetch-contributors'
 import { headInfo } from './plugins/vite-head-info'
+import { fetchContributors } from './plugins/vite-fetch-contributors'
 import { i18nVirtualManifest } from './plugins/vite-i18n-virtual-manifest'
 
 export default defineConfig(({ mode }) => {
