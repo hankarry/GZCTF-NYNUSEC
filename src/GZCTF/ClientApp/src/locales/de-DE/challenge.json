@@ -35,6 +35,7 @@
     "web": "Web-Sicherheit"
   },
   "content": {
+    "ai_policy_warning": "KI darf an keinem Teil der Lösung dieser Aufgabe beteiligt sein. Bitte löse sie selbst!",
     "already_solved": "Diese Herausforderung wurde gelöst",
     "attempts": {
       "count": "Du hast bereits {{count}} Mal versucht!",

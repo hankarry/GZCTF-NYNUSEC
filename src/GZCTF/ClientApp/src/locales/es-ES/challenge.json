@@ -35,6 +35,7 @@
     "web": "Seguridad web"
   },
   "content": {
+    "ai_policy_warning": "No se permite la participación de IA en ninguna parte de la resolución de este desafío. ¡Resuélvelo por tu cuenta!",
     "already_solved": "Este desafío ha sido resuelto",
     "attempts": {
       "count": "¡Ya has intentado {{count}} veces!",

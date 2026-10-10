@@ -75,6 +75,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "When disabled, a warning prohibiting AI participation appears below the challenge hints",
+          "label": "Allow AI participation",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "Are you sure you want to remove the attachment of this challenge?",

@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "關閉後，題目詳情會在提示下方顯示禁止 AI 參與解題的警告",
+          "label": "允許 AI 參與解題",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "你確定要清除本題的附件嗎？",

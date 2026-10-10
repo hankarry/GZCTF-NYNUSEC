@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "Wenn deaktiviert, erscheint unter den Hinweisen eine Warnung, dass KI nicht erlaubt ist.",
+          "label": "KI-Beteiligung erlauben",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "Sind Sie sicher, dass Sie den Anhang dieser Herausforderung entfernen möchten?",

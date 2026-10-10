@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "Khi tắt, cảnh báo cấm AI tham gia giải bài sẽ xuất hiện bên dưới gợi ý.",
+          "label": "Cho phép AI tham gia giải bài",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "Bạn có chắc muốn gỡ bỏ tệp đính kèm của thử thách này?",

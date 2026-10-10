@@ -38,6 +38,11 @@ public class ChallengeDetailModel
     public List<string>? Hints { get; set; }
 
     /// <summary>
+    /// Whether AI may participate in solving the challenge
+    /// </summary>
+    public bool AllowAI { get; set; } = true;
+
+    /// <summary>
     /// Current score of the challenge
     /// </summary>
     public int Score { get; set; }
@@ -74,6 +79,7 @@ public class ChallengeDetailModel
             Id = gameInstance.Challenge.Id,
             Content = gameInstance.Challenge.Content,
             Hints = gameInstance.Challenge.GetReleasedHints(),
+            AllowAI = gameInstance.Challenge.AllowAI,
             Score = scoreboardChallenge?.Score ?? gameInstance.Challenge.CurrentScore,
             Category = gameInstance.Challenge.Category,
             DifficultyLevel = gameInstance.Challenge.DifficultyLevel,

@@ -48,6 +48,11 @@ public class TransferChallenge : IValidatableObject
     public bool Enabled { get; set; }
 
     /// <summary>
+    /// Whether AI may participate in solving the challenge. Older imports default to allowed.
+    /// </summary>
+    public bool AllowAI { get; set; } = true;
+
+    /// <summary>
     /// Scoring configuration
     /// </summary>
     [Required(ErrorMessage = "Scoring configuration is required")]

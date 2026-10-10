@@ -35,6 +35,7 @@
     "web": "ウェブセキュリティ"
   },
   "content": {
+    "ai_policy_warning": "この問題を解くいかなる部分にも AI の参加は認められません。選手自身で解いてください！",
     "already_solved": "このチャレンジはすでに解かれています",
     "attempts": {
       "count": "すでに {{count}} 回試しました！",

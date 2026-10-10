@@ -436,6 +436,18 @@ const GameChallengeEdit: FC = () => {
                 onChangeHint={(hints, hintEnabled) => setChallengeInfo({ ...challengeInfo, hints, hintEnabled })}
                 onToggleHint={onToggleHint}
               />
+              <Stack gap="xs">
+                <Text size="sm" fw={500}>
+                  {t('admin.content.games.challenges.ai_policy.title')}
+                </Text>
+                <Switch
+                  disabled={disabled}
+                  checked={challengeInfo.allowAI ?? true}
+                  label={t('admin.content.games.challenges.ai_policy.label')}
+                  description={t('admin.content.games.challenges.ai_policy.description')}
+                  onChange={(e) => setChallengeInfo({ ...challengeInfo, allowAI: e.target.checked })}
+                />
+              </Stack>
             </Stack>
           </Grid.Col>
           <Grid.Col span={1}>
@@ -661,6 +673,7 @@ const GameChallengeEdit: FC = () => {
         challenge={{
           title: tryDefault([challengeInfo?.title, challenge?.title], ''),
           content: tryDefault([challengeInfo?.content, challenge?.content]),
+          allowAI: challengeInfo.allowAI ?? challenge?.allowAI ?? true,
           hints: (challengeInfo?.hints ?? []).filter(
             (hint, index) => challengeInfo.hintEnabled?.[index] && hint.trim()
           ),

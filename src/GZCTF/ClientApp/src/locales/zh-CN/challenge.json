@@ -35,6 +35,7 @@
     "web": "网络安全"
   },
   "content": {
+    "ai_policy_warning": "不允许AI参与解题的任一部分中，请选手自行解题！",
     "already_solved": "该题目已被解出",
     "attempts": {
       "count": "已经尝试提交 {{count}} 次",

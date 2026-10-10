@@ -75,6 +75,7 @@ public static class TransferExtensions
                 DifficultyLevel = challenge.DifficultyLevel,
                 Type = challenge.Type,
                 Enabled = challenge.IsEnabled,
+                AllowAI = challenge.AllowAI,
                 Scoring = new ScoringSection
                 {
                     Original = challenge.OriginalScore,
@@ -258,6 +259,7 @@ public static class TransferExtensions
                 DifficultyLevel = transfer.DifficultyLevel,
                 Type = transfer.Type,
                 IsEnabled = transfer.Enabled,
+                AllowAI = transfer.AllowAI,
                 OriginalScore = transfer.Scoring.Original,
                 MinScoreRate = transfer.Scoring.MinRate,
                 Difficulty = transfer.Scoring.Difficulty,

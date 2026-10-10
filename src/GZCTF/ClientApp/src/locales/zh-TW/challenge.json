@@ -35,6 +35,7 @@
     "web": "網絡安全"
   },
   "content": {
+    "ai_policy_warning": "不允許AI參與解題的任一部分中，請選手自行解題！",
     "already_solved": "該題目已被解出",
     "attempts": {
       "count": "你已經嘗試了 {{count}} 次啦！",

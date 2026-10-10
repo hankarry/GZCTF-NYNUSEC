@@ -35,6 +35,7 @@
     "web": "Web security"
   },
   "content": {
+    "ai_policy_warning": "AI participation is not allowed in any part of solving this challenge. Please solve it yourself!",
     "already_solved": "This challenge has been solved",
     "attempts": {
       "count": "You've tried {{count}} times already!",
