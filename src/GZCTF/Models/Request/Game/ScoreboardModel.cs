@@ -369,6 +369,12 @@ public partial class ChallengeInfo
     [NotMapped]
     [MemoryPackIgnore]
     public bool DisableBloodBonus { get; set; }
+
+    /// <summary>
+    /// Display difficulty of the challenge
+    /// </summary>
+    [SuppressDefaultInitialization]
+    public ChallengeDifficulty DifficultyLevel { get; set; } = ChallengeDifficulty.Medium;
 }
 
 [MemoryPackable]

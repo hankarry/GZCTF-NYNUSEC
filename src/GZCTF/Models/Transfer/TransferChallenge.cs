@@ -31,6 +31,12 @@ public class TransferChallenge : IValidatableObject
     public ChallengeCategory Category { get; set; } = ChallengeCategory.Misc;
 
     /// <summary>
+    /// Display difficulty of the challenge. Older imports default to medium.
+    /// </summary>
+    [EnumDataType(typeof(ChallengeDifficulty))]
+    public ChallengeDifficulty DifficultyLevel { get; set; } = ChallengeDifficulty.Medium;
+
+    /// <summary>
     /// Challenge type
     /// </summary>
     [Required(ErrorMessage = "Challenge type is required")]

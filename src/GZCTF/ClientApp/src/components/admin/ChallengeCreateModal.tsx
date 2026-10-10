@@ -6,6 +6,7 @@ import { Icon } from '@mdi/react'
 import { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
+import { ChallengeDifficultyOptions } from '@Utils/ChallengeDifficulty'
 import { showErrorMsg } from '@Utils/Shared'
 import {
   ChallengeCategoryItem,
@@ -14,7 +15,7 @@ import {
   useChallengeCategoryLabelMap,
   useChallengeTypeLabelMap,
 } from '@Utils/Shared'
-import api, { ChallengeInfoModel, ChallengeCategory, ChallengeType } from '@Api'
+import api, { ChallengeInfoModel, ChallengeCategory, ChallengeDifficulty, ChallengeType } from '@Api'
 
 interface ChallengeCreateModalProps extends ModalProps {
   onAddChallenge: (game: ChallengeInfoModel) => void
@@ -31,6 +32,7 @@ export const ChallengeCreateModal: FC<ChallengeCreateModalProps> = (props) => {
   const [title, setTitle] = useInputState('')
   const [category, setCategory] = useState<string | null>(null)
   const [type, setType] = useState<string | null>(null)
+  const [difficultyLevel, setDifficultyLevel] = useState<ChallengeDifficulty>(ChallengeDifficulty.Medium)
 
   const { t } = useTranslation()
 
@@ -45,6 +47,7 @@ export const ChallengeCreateModal: FC<ChallengeCreateModalProps> = (props) => {
         title: title,
         category: category as ChallengeCategory,
         type: type as ChallengeType,
+        difficultyLevel,
       })
       showNotification({
         color: 'teal',
@@ -95,6 +98,13 @@ export const ChallengeCreateModal: FC<ChallengeCreateModalProps> = (props) => {
             const data = challengeTypeLabelMap.get(type[1])
             return { value: type[1], label: data?.name, ...data } as ComboboxItem
           })}
+        />
+        <Select
+          required
+          label={t('admin.content.games.challenges.difficulty_level')}
+          value={difficultyLevel}
+          onChange={(value) => value && setDifficultyLevel(value as ChallengeDifficulty)}
+          data={ChallengeDifficultyOptions}
         />
         <Button fullWidth disabled={disabled} onClick={onCreate}>
           {t('admin.button.challenges.new')}

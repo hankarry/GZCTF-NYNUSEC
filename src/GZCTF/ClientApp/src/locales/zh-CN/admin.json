@@ -122,6 +122,7 @@
         "delete": "你确定要删除题目 {{name}} 吗？",
         "description": "题目描述",
         "difficulty": "难度系数",
+        "difficulty_level": "题目难度",
         "disable": "你确定要禁用题目 {{name}} 吗？",
         "empty": {
           "description": "点击右上角创建第一个题目",

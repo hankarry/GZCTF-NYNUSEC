@@ -616,6 +616,9 @@ namespace GZCTF.Migrations
                     b.Property<double>("Difficulty")
                         .HasColumnType("double precision");
 
+                    b.Property<byte>("DifficultyLevel")
+                        .HasColumnType("smallint");
+
                     b.Property<bool>("DisableBloodBonus")
                         .HasColumnType("boolean");
 

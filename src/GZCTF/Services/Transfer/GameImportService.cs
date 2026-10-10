@@ -385,6 +385,7 @@ public class GameImportService(
             Title = transferChallenge.Title,
             Content = transferChallenge.Content,
             Category = transferChallenge.Category,
+            DifficultyLevel = transferChallenge.DifficultyLevel,
             Type = transferChallenge.Type,
             IsEnabled = false, // Import as disabled by default
             GameId = game.Id,

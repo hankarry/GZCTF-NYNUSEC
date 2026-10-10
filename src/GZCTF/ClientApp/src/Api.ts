@@ -115,6 +115,15 @@ export enum ChallengeCategory {
   OSINT = "OSINT",
 }
 
+/** Display difficulty of a game challenge */
+export enum ChallengeDifficulty {
+  VeryEasy = "VeryEasy",
+  Easy = "Easy",
+  Medium = "Medium",
+  Hard = "Hard",
+  VeryHard = "VeryHard",
+}
+
 export enum ParticipationStatus {
   Pending = "Pending",
   Accepted = "Accepted",
@@ -1129,6 +1138,8 @@ export interface ChallengeEditDetailModel {
   content?: string;
   /** Challenge category */
   category: ChallengeCategory;
+  /** Display difficulty of the challenge */
+  difficultyLevel?: ChallengeDifficulty;
   /** Challenge type */
   type: ChallengeType;
   /** Challenge hints */
@@ -1273,6 +1284,8 @@ export interface ChallengeInfoModel {
   title: string;
   /** Challenge category */
   category?: ChallengeCategory;
+  /** Display difficulty of the challenge */
+  difficultyLevel?: ChallengeDifficulty;
   /** Challenge type */
   type?: ChallengeType;
   /** Is the challenge enabled */
@@ -1315,6 +1328,8 @@ export interface ChallengeUpdateModel {
   flagTemplate?: string | null;
   /** Challenge category */
   category?: ChallengeCategory | null;
+  /** Display difficulty of the challenge */
+  difficultyLevel?: ChallengeDifficulty | null;
   /** Challenge hints */
   hints?: string[] | null;
   /** Release state of each hint, in the same order as hints. New hints default to disabled. */
@@ -1732,6 +1747,8 @@ export interface ChallengeInfo {
   title: string;
   /** Challenge category */
   category: ChallengeCategory;
+  /** Display difficulty of the challenge */
+  difficultyLevel?: ChallengeDifficulty;
   /**
    * Challenge score
    * @format int32
@@ -1994,6 +2011,8 @@ export interface ChallengeDetailModel {
   content?: string;
   /** Challenge category */
   category?: ChallengeCategory;
+  /** Display difficulty of the challenge */
+  difficultyLevel?: ChallengeDifficulty;
   /** Challenge hints */
   hints?: string[] | null;
   /**

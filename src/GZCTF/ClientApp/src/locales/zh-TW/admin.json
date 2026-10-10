@@ -119,6 +119,7 @@
         "delete": "你確定要刪除題目 {{name}} 嗎？",
         "description": "題目描述",
         "difficulty": "難度係數",
+        "difficulty_level": "題目難度",
         "disable": "你確定要禁用題目 {{name}} 嗎？",
         "empty": {
           "description": "點擊右上角創建第一個題目",

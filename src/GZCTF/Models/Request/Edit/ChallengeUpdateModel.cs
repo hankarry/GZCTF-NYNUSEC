@@ -32,6 +32,12 @@ public class ChallengeUpdateModel : IValidatableObject
     public ChallengeCategory? Category { get; set; }
 
     /// <summary>
+    /// Display difficulty of the challenge
+    /// </summary>
+    [EnumDataType(typeof(ChallengeDifficulty))]
+    public ChallengeDifficulty? DifficultyLevel { get; set; }
+
+    /// <summary>
     /// Challenge hints
     /// </summary>
     public List<string>? Hints { get; set; }

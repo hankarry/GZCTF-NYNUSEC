@@ -27,6 +27,12 @@ public class ChallengeInfoModel
     public ChallengeCategory Category { get; set; } = ChallengeCategory.Misc;
 
     /// <summary>
+    /// Display difficulty of the challenge
+    /// </summary>
+    [EnumDataType(typeof(ChallengeDifficulty))]
+    public ChallengeDifficulty DifficultyLevel { get; set; } = ChallengeDifficulty.Medium;
+
+    /// <summary>
     /// Challenge type
     /// </summary>
     public ChallengeType Type { get; set; } = ChallengeType.StaticAttachment;
@@ -62,6 +68,7 @@ public class ChallengeInfoModel
             Id = challenge.Id,
             Title = challenge.Title,
             Category = challenge.Category,
+            DifficultyLevel = challenge.DifficultyLevel,
             Type = challenge.Type,
             Score = challenge.OriginalScore, // This field should be updated with scoreboard
             MinScore = (int)Math.Floor(challenge.MinScoreRate * challenge.OriginalScore),

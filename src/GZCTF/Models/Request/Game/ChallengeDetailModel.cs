@@ -28,6 +28,11 @@ public class ChallengeDetailModel
     public ChallengeCategory Category { get; set; } = ChallengeCategory.Misc;
 
     /// <summary>
+    /// Display difficulty of the challenge
+    /// </summary>
+    public ChallengeDifficulty DifficultyLevel { get; set; } = ChallengeDifficulty.Medium;
+
+    /// <summary>
     /// Challenge hints
     /// </summary>
     public List<string>? Hints { get; set; }
@@ -71,6 +76,7 @@ public class ChallengeDetailModel
             Hints = gameInstance.Challenge.GetReleasedHints(),
             Score = scoreboardChallenge?.Score ?? gameInstance.Challenge.CurrentScore,
             Category = gameInstance.Challenge.Category,
+            DifficultyLevel = gameInstance.Challenge.DifficultyLevel,
             Title = gameInstance.Challenge.Title,
             Type = gameInstance.Challenge.Type,
             Limit = gameInstance.Challenge.SubmissionLimit,

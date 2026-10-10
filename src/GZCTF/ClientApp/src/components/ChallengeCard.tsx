@@ -18,6 +18,7 @@ import cx from 'clsx'
 import dayjs from 'dayjs'
 import { FC, useMemo } from 'react'
 import { Trans } from 'react-i18next'
+import { ChallengeDifficultyBadge } from '@Components/ChallengeDifficultyBadge'
 import { ScrollingText } from '@Components/ScrollingText'
 import { useLanguage } from '@Utils/I18n'
 import { BloodsTypes, PartialIconProps, useChallengeCategoryLabelMap } from '@Utils/Shared'
@@ -56,8 +57,9 @@ export const ChallengeCard: FC<ChallengeCardProps> = (props: ChallengeCardProps)
       data-no-move
     >
       <Stack gap="xs" pos="relative" style={{ zIndex: 99 }}>
-        <Group h="30px" wrap="nowrap" justify="space-between" gap={2}>
+        <Group h="30px" wrap="nowrap" justify="space-between" gap={2} pr={solved ? '1.25rem' : undefined}>
           <ScrollingText text={challenge.title || ''} size="lg" />
+          <ChallengeDifficultyBadge difficulty={challenge.difficultyLevel} />
         </Group>
         <Divider size="sm" color={cateData?.color} />
         <Group wrap="nowrap" justify="space-between" align="center" gap={2}>

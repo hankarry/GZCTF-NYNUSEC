@@ -119,6 +119,7 @@
         "delete": "Sind Sie sicher, dass Sie die Herausforderung {{name}} löschen möchten?",
         "description": "Beschreibung",
         "difficulty": "Schwierigkeitsgrad",
+        "difficulty_level": "Aufgabenschwierigkeit",
         "disable": "Sind Sie sicher, dass Sie die Herausforderung {{name}} deaktivieren möchten?",
         "empty": {
           "description": "Klicken Sie oben rechts, um die erste Herausforderung zu erstellen",

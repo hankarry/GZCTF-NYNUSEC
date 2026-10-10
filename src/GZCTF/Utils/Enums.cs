@@ -372,6 +372,19 @@ public enum Difficulty : byte
 }
 
 /// <summary>
+/// Display difficulty of a game challenge, independent of its scoring coefficient
+/// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<ChallengeDifficulty>))]
+public enum ChallengeDifficulty : byte
+{
+    VeryEasy = 0,
+    Easy = 1,
+    Medium = 2,
+    Hard = 3,
+    VeryHard = 4
+}
+
+/// <summary>
 /// Container network mode
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<NetworkMode>))]

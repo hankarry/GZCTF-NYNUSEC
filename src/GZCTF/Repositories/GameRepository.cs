@@ -391,6 +391,7 @@ public class GameRepository(
                         Id = c.Id,
                         Title = c.Title,
                         Category = c.Category,
+                        DifficultyLevel = c.DifficultyLevel,
                         Score = c.OriginalScore,
                         SolvedCount = 0,
                         DeadlineUtc = c.DeadlineUtc,

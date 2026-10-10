@@ -571,7 +571,10 @@ public class EditController(
                 StatusCodes.Status404NotFound));
 
         var res = await challengeRepository.CreateChallenge(game,
-            new GameChallenge { Title = model.Title, Type = model.Type, Category = model.Category }, token);
+            new GameChallenge
+            {
+                Title = model.Title, Type = model.Type, Category = model.Category, DifficultyLevel = model.DifficultyLevel
+            }, token);
 
         return Ok(ChallengeEditDetailModel.FromChallenge(res));
     }

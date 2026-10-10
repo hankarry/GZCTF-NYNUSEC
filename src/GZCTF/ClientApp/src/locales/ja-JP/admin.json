@@ -119,6 +119,7 @@
         "delete": "チャレンジ {{name}} を削除してもよろしいですか？",
         "description": "説明",
         "difficulty": "難易度",
+        "difficulty_level": "問題の難易度",
         "disable": "チャレンジ {{name}} を無効にしてもよろしいですか？",
         "empty": {
           "description": "右上のボタンをクリックして最初のチャレンジを作成する",

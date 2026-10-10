@@ -119,6 +119,7 @@
         "delete": "Bạn có chắc chắn muốn xóa thử thách {{name}} không?",
         "description": "Mô tả",
         "difficulty": "Độ khó",
+        "difficulty_level": "Độ khó thử thách",
         "disable": "Bạn có chắc chắn muốn vô hiệu hóa thử thách {{name}} không?",
         "empty": {
           "description": "Nhấp vào phía trên bên phải để tạo thử thách đầu tiên",

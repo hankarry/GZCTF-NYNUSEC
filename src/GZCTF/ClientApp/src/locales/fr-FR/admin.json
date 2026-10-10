@@ -119,6 +119,7 @@
         "delete": "Êtes-vous sûr de vouloir supprimer le défi {{name}} ?",
         "description": "Description",
         "difficulty": "Facteur de difficulté",
+        "difficulty_level": "Difficulté du défi",
         "disable": "Êtes-vous sûr de vouloir désactiver le défi {{name}} ?",
         "empty": {
           "description": "Cliquez en haut à droite pour créer le premier défi",

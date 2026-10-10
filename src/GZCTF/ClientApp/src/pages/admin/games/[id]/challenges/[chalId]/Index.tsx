@@ -23,12 +23,14 @@ import dayjs from 'dayjs'
 import { FC, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router'
+import { ChallengeDifficultyBadge } from '@Components/ChallengeDifficultyBadge'
 import { HintList } from '@Components/HintList'
 import { InstanceEntry } from '@Components/InstanceEntry'
 import { ChallengePreviewModal } from '@Components/admin/ChallengePreviewModal'
 import { SwitchLabel } from '@Components/admin/SwitchLabel'
 import { WithChallengeEdit } from '@Components/admin/WithChallengeEdit'
 import { ScoreFunc } from '@Components/charts/ScoreFunc'
+import { ChallengeDifficultyOptions } from '@Utils/ChallengeDifficulty'
 import { getInputNumber, NetworkModeItem, NetworkModeList, showErrorMsg, useNetworkModeMap } from '@Utils/Shared'
 import {
   ChallengeCategoryItem,
@@ -42,6 +44,7 @@ import { useGame } from '@Hooks/useGame'
 import { useSyncOnChange } from '@Hooks/useSyncOnChange'
 import api, {
   ChallengeCategory,
+  ChallengeDifficulty,
   ChallengeEditDetailModel,
   ChallengeType,
   ChallengeUpdateModel,
@@ -242,9 +245,12 @@ const GameChallengeEdit: FC = () => {
       backUrl={`/admin/games/${id}/challenges`}
       head={
         <>
-          <Title lineClamp={1} className={misc.wordBreakAll}>
-            # {challengeInfo?.title}
-          </Title>
+          <Group gap="sm" wrap="nowrap" miw={0}>
+            <Title lineClamp={1} className={misc.wordBreakAll} style={{ minWidth: 0 }}>
+              # {challengeInfo?.title}
+            </Title>
+            <ChallengeDifficultyBadge difficulty={challengeInfo.difficultyLevel} />
+          </Group>
           <Group wrap="nowrap" justify="right">
             <Button
               disabled={disabled}
@@ -371,6 +377,16 @@ const GameChallengeEdit: FC = () => {
           </Grid.Col>
           <Grid.Col span={1}>
             <Stack gap="0.425625rem">
+              <Select
+                required
+                label={t('admin.content.games.challenges.difficulty_level')}
+                value={challengeInfo.difficultyLevel ?? ChallengeDifficulty.Medium}
+                disabled={disabled}
+                onChange={(value) => {
+                  if (value) setChallengeInfo({ ...challengeInfo, difficultyLevel: value as ChallengeDifficulty })
+                }}
+                data={ChallengeDifficultyOptions}
+              />
               <NumberInput
                 label={t('admin.content.games.challenges.submission_limit.label')}
                 description={t('admin.content.games.challenges.submission_limit.description')}
@@ -652,6 +668,7 @@ const GameChallengeEdit: FC = () => {
           limit: tryDefault([challengeInfo?.submissionLimit, challenge?.submissionLimit], 0),
           category: category as ChallengeCategory,
           deadline: deadline ? deadline.valueOf() : undefined,
+          difficultyLevel: challengeInfo.difficultyLevel ?? ChallengeDifficulty.Medium,
           type: challenge?.type ?? ChallengeType.StaticAttachment,
         }}
         opened={previewOpened}

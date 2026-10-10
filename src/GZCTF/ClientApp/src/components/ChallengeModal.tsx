@@ -18,6 +18,7 @@ import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import { FC, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ChallengeDifficultyBadge } from '@Components/ChallengeDifficultyBadge'
 import { InstanceEntry } from '@Components/InstanceEntry'
 import { ContentPlaceholder, InlineMarkdown, Markdown } from '@Components/MarkdownRenderer'
 import { useLanguage } from '@Utils/I18n'
@@ -139,11 +140,12 @@ export const ChallengeModal: FC<ChallengeModalProps> = (props) => {
   const title = (
     <Stack gap="xs">
       <Group wrap="nowrap" w="100%" justify="space-between" gap="sm">
-        <Group wrap="nowrap" gap="sm" w="calc(100% - 6.75rem)">
+        <Group wrap="nowrap" gap="sm" w="calc(100% - 6.75rem)" miw={0}>
           {cateData && <Icon path={cateData.icon} size={1.2} color={theme.colors[cateData.color][5]} />}
-          <Title order={4} lineClamp={1}>
+          <Title order={4} lineClamp={1} style={{ minWidth: 0 }}>
             {challenge?.title ?? ''}
           </Title>
+          {challenge && <ChallengeDifficultyBadge difficulty={challenge.difficultyLevel} />}
         </Group>
         <Text miw="6rem" fw="bold" ff="monospace" ta="right">
           {challenge?.score ?? 0} pts

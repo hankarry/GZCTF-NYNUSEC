@@ -72,6 +72,7 @@ public static class TransferExtensions
                 Title = challenge.Title,
                 Content = challenge.Content,
                 Category = challenge.Category,
+                DifficultyLevel = challenge.DifficultyLevel,
                 Type = challenge.Type,
                 Enabled = challenge.IsEnabled,
                 Scoring = new ScoringSection
@@ -254,6 +255,7 @@ public static class TransferExtensions
                 Title = transfer.Title,
                 Content = transfer.Content,
                 Category = transfer.Category,
+                DifficultyLevel = transfer.DifficultyLevel,
                 Type = transfer.Type,
                 IsEnabled = transfer.Enabled,
                 OriginalScore = transfer.Scoring.Original,

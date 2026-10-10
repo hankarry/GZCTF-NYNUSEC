@@ -15,6 +15,7 @@ import { Icon } from '@mdi/react'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router'
+import { ChallengeDifficultyBadge } from '@Components/ChallengeDifficultyBadge'
 import { useChallengeCategoryLabelMap } from '@Utils/Shared'
 import { ChallengeInfoModel, ChallengeCategory } from '@Api'
 import classes from '@Styles/ChallengeEditCard.module.css'
@@ -60,9 +61,12 @@ export const ChallengeEditCard: FC<ChallengeEditCardProps> = ({ challenge, onTog
         <Icon path={data!.icon} color={theme.colors[data?.color ?? theme.primaryColor][5]} size={1.2} />
 
         <Stack gap={0} maw={contentWidth} miw={contentWidth}>
-          <Text truncate fw="bold">
-            {challenge.title}
-          </Text>
+          <Group gap="xs" wrap="nowrap">
+            <Text truncate fw="bold" style={{ minWidth: 0 }}>
+              {challenge.title}
+            </Text>
+            <ChallengeDifficultyBadge difficulty={challenge.difficultyLevel} />
+          </Group>
           <Text size="sm" fw="bold" ff="monospace" w="5rem">
             {challenge.score}
             <Text span fw="bold" c="dimmed">

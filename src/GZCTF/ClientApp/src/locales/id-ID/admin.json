@@ -119,6 +119,7 @@
         "delete": "Apakah kamu yakin ingin menghapus tantangan {{name}}?",
         "description": "Deskripsi",
         "difficulty": "Tingkat kesulitan",
+        "difficulty_level": "Kesulitan tantangan",
         "disable": "Apakah kamu yakin ingin menonaktifkan challenge {{name}}?",
         "empty": {
           "description": "Klik pojok kanan atas untuk membuat challenge pertama",

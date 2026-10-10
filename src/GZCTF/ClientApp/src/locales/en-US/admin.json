@@ -122,6 +122,7 @@
         "delete": "Are you sure you want to delete challenge {{name}}?",
         "description": "Description",
         "difficulty": "Difficulty Factor",
+        "difficulty_level": "Challenge Difficulty",
         "disable": "Are you sure you want to disable challenge {{name}}?",
         "empty": {
           "description": "Click the top right to create the first challenge",

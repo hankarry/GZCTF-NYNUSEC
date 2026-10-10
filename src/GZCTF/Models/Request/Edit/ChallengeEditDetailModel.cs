@@ -34,6 +34,11 @@ public class ChallengeEditDetailModel
     public ChallengeCategory Category { get; set; } = ChallengeCategory.Misc;
 
     /// <summary>
+    /// Display difficulty of the challenge
+    /// </summary>
+    public ChallengeDifficulty DifficultyLevel { get; set; } = ChallengeDifficulty.Medium;
+
+    /// <summary>
     /// Challenge type
     /// </summary>
     [Required]
@@ -167,6 +172,7 @@ public class ChallengeEditDetailModel
             Title = chal.Title,
             Content = chal.Content,
             Category = chal.Category,
+            DifficultyLevel = chal.DifficultyLevel,
             Type = chal.Type,
             FlagTemplate = chal.FlagTemplate,
             Hints = chal.Hints ?? [],
