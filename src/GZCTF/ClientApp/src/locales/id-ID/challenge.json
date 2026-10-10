@@ -35,6 +35,7 @@
     "web": "Web security"
   },
   "content": {
+    "ai_policy_warning": "AI tidak diizinkan terlibat dalam bagian mana pun dari penyelesaian tantangan ini. Silakan selesaikan sendiri!",
     "already_solved": "Challenge ini sudah diselesaikan",
     "attempts": {
       "count": "Kamu sudah mencoba {{count}} kali!",

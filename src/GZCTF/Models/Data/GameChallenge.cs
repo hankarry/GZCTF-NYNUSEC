@@ -7,6 +7,11 @@ namespace GZCTF.Models.Data;
 public class GameChallenge : Challenge
 {
     /// <summary>
+    /// Whether AI may participate in solving the challenge
+    /// </summary>
+    public bool AllowAI { get; set; } = true;
+
+    /// <summary>
     /// Release state of each hint. Null preserves the visibility of hints created before release controls existed.
     /// </summary>
     public bool[]? HintEnabled { get; set; } = [];
@@ -75,6 +80,7 @@ public class GameChallenge : Challenge
         Title = model.Title ?? Title;
         Content = model.Content ?? Content;
         Category = model.Category ?? Category;
+        AllowAI = model.AllowAI ?? AllowAI;
         if (model.Hints is { } hints)
         {
             // Legacy clients can still send text-only lists. Preserve matching hints' states,

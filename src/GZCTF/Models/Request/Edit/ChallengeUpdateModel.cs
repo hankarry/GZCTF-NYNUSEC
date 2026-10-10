@@ -37,6 +37,11 @@ public class ChallengeUpdateModel : IValidatableObject
     public List<string>? Hints { get; set; }
 
     /// <summary>
+    /// Whether AI may participate in solving the challenge
+    /// </summary>
+    public bool? AllowAI { get; set; }
+
+    /// <summary>
     /// Release state of each hint, in the same order as Hints. New hints default to disabled.
     /// </summary>
     public bool[]? HintEnabled { get; set; }

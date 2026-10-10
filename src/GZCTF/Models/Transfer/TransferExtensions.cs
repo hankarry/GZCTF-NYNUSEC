@@ -74,6 +74,7 @@ public static class TransferExtensions
                 Category = challenge.Category,
                 Type = challenge.Type,
                 Enabled = challenge.IsEnabled,
+                AllowAI = challenge.AllowAI,
                 Scoring = new ScoringSection
                 {
                     Original = challenge.OriginalScore,
@@ -256,6 +257,7 @@ public static class TransferExtensions
                 Category = transfer.Category,
                 Type = transfer.Type,
                 IsEnabled = transfer.Enabled,
+                AllowAI = transfer.AllowAI,
                 OriginalScore = transfer.Scoring.Original,
                 MinScoreRate = transfer.Scoring.MinRate,
                 Difficulty = transfer.Scoring.Difficulty,

@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "Lorsque cette option est désactivée, un avertissement interdisant l’IA apparaît sous les indices.",
+          "label": "Autoriser la participation de l’IA",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "Êtes-vous sûr de vouloir supprimer la pièce jointe de ce défi ?",

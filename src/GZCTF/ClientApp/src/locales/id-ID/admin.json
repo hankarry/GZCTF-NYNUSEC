@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "Jika dinonaktifkan, peringatan larangan keterlibatan AI muncul di bawah petunjuk tantangan.",
+          "label": "Izinkan keterlibatan AI",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "Apakah kamu yakin ingin menghapus lampiran tantangan ini?",

@@ -1133,6 +1133,8 @@ export interface ChallengeEditDetailModel {
   type: ChallengeType;
   /** Challenge hints */
   hints?: string[];
+  /** Whether AI may participate in solving the challenge */
+  allowAI?: boolean;
   /** Release state of each hint, in the same order as hints */
   hintEnabled?: boolean[];
   /**
@@ -1317,6 +1319,8 @@ export interface ChallengeUpdateModel {
   category?: ChallengeCategory | null;
   /** Challenge hints */
   hints?: string[] | null;
+  /** Whether AI may participate in solving the challenge */
+  allowAI?: boolean | null;
   /** Release state of each hint, in the same order as hints. New hints default to disabled. */
   hintEnabled?: boolean[] | null;
   /** Is the challenge enabled */
@@ -1996,6 +2000,8 @@ export interface ChallengeDetailModel {
   category?: ChallengeCategory;
   /** Challenge hints */
   hints?: string[] | null;
+  /** Whether AI may participate in solving the challenge */
+  allowAI?: boolean;
   /**
    * Current score of the challenge
    * @format int32

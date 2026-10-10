@@ -45,6 +45,11 @@ public class ChallengeEditDetailModel
     public List<string> Hints { get; set; } = [];
 
     /// <summary>
+    /// Whether AI may participate in solving the challenge
+    /// </summary>
+    public bool AllowAI { get; set; } = true;
+
+    /// <summary>
     /// Release state of each hint, in the same order as Hints
     /// </summary>
     public bool[] HintEnabled { get; set; } = [];
@@ -170,6 +175,7 @@ public class ChallengeEditDetailModel
             Type = chal.Type,
             FlagTemplate = chal.FlagTemplate,
             Hints = chal.Hints ?? [],
+            AllowAI = chal.AllowAI,
             HintEnabled = chal.GetHintEnabled(),
             IsEnabled = chal.IsEnabled,
             ContainerImage = chal.ContainerImage,

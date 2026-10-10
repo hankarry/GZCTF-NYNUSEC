@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "無効にすると、ヒントの下に AI の参加を禁止する警告が表示されます。",
+          "label": "AI の参加を許可する",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "このチャレンジのアタッチメントを削除しても良いですか？",

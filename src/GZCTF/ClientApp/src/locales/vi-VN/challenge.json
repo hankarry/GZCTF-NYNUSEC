@@ -35,6 +35,7 @@
     "web": "Web security"
   },
   "content": {
+    "ai_policy_warning": "Không cho phép AI tham gia bất kỳ phần nào của việc giải bài này. Thí sinh hãy tự giải bài!",
     "already_solved": "Thử thách này đã được giải",
     "attempts": {
       "count": "Bạn đã thử {{count}} lần rồi!",

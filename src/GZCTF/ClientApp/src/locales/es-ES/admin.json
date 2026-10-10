@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "Al desactivarlo, aparece debajo de las pistas una advertencia que prohíbe la participación de IA.",
+          "label": "Permitir la participación de IA",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "¿Está seguro de que desea eliminar el archivo adjunto de este desafío?",

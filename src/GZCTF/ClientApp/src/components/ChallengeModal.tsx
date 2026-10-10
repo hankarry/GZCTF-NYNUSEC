@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Divider,
   Group,
@@ -12,7 +13,7 @@ import {
   ScrollAreaAutosize,
   Input,
 } from '@mantine/core'
-import { mdiLightbulbOnOutline, mdiOpenInNew, mdiPackageVariantClosed } from '@mdi/js'
+import { mdiAlertOutline, mdiLightbulbOnOutline, mdiOpenInNew, mdiPackageVariantClosed } from '@mdi/js'
 import { Icon } from '@mdi/react'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
@@ -169,6 +170,11 @@ export const ChallengeModal: FC<ChallengeModalProps> = (props) => {
                 </Group>
               ))}
             </Stack>
+          )}
+          {challenge.allowAI === false && (
+            <Alert color="yellow" mt="sm" icon={<Icon path={mdiAlertOutline} size={0.85} />}>
+              {t('challenge.content.ai_policy_warning')}
+            </Alert>
           )}
         </>
       )}

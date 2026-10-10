@@ -72,6 +72,11 @@
   "content": {
     "games": {
       "challenges": {
+        "ai_policy": {
+          "description": "비활성화하면 힌트 아래에 AI 참여를 금지하는 경고가 표시됩니다.",
+          "label": "AI 참여 허용",
+          "title": "AI Policy"
+        },
         "attachment": {
           "clear": {
             "description": "정말로 이 첨부파일을 삭제하시겠습니까?",

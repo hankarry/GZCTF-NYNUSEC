@@ -35,6 +35,7 @@
     "web": "Sécurité web"
   },
   "content": {
+    "ai_policy_warning": "L’IA ne peut participer à aucune partie de la résolution de ce défi. Veuillez le résoudre vous-même !",
     "already_solved": "Ce défi a été résolu",
     "attempts": {
       "count": "Vous avez déjà essayé {{count}} fois !",
