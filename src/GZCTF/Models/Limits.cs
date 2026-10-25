@@ -33,6 +33,11 @@ public static class Limits
     public const int MaxStdNumberLength = 64;
 
     /// <summary>
+    /// QQ number maximum length
+    /// </summary>
+    public const int MaxQQNumberLength = 20;
+
+    /// <summary>
     /// 用户名最小长度
     /// </summary>
     public const int MinUserNameLength = 3;

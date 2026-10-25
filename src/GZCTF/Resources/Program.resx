@@ -821,6 +821,12 @@
   <data name="Model_MalformedPhoneNumber" xml:space="preserve">
     <value>Invalid phone number</value>
   </data>
+  <data name="Model_MalformedQQNumber" xml:space="preserve">
+    <value>QQ number must contain 5 to 20 digits and cannot start with 0</value>
+  </data>
+  <data name="Model_QQTooLong" xml:space="preserve">
+    <value>QQ number is too long</value>
+  </data>
   <data name="Model_NewPasswordRequired" xml:space="preserve">
     <value>A new password is required</value>
   </data>

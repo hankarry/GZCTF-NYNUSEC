@@ -148,6 +148,14 @@ export const UserEditModal: FC<UserEditModalProps> = (props) => {
             disabled={disabled}
             onChange={(event) => setProfile({ ...profile, realName: event.target.value })}
           />
+          <TextInput
+            label={t('account.label.qq')}
+            inputMode="numeric"
+            maxLength={20}
+            value={profile.qq ?? ''}
+            disabled={disabled}
+            onChange={(event) => setProfile({ ...profile, qq: event.target.value })}
+          />
         </SimpleGrid>
         <Textarea
           label={t('account.label.bio')}

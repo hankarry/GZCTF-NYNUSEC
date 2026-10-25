@@ -270,6 +270,12 @@ export type LoginModel = ModelWithCaptcha & {
 /** Basic account information update */
 export interface ProfileUpdateModel {
   /**
+   * QQ number
+   * @maxLength 20
+   * @pattern ^[1-9][0-9]{4,19}$
+   */
+  qq?: string | null;
+  /**
    * Username
    * @minLength 3
    * @maxLength 15
@@ -336,6 +342,8 @@ export interface MailChangeModel {
 
 /** Basic account information */
 export interface ProfileUserInfoModel {
+  /** QQ number */
+  qq?: string | null;
   /**
    * User ID
    * @format guid
@@ -455,6 +463,8 @@ export interface ArrayResponseOfUserInfoModel {
 
 /** User information (Admin) */
 export interface UserInfoModel {
+  /** QQ number */
+  qq?: string | null;
   /**
    * User ID
    * @format guid
@@ -494,6 +504,12 @@ export interface UserInfoModel {
 
 /** Batch user creation (Admin) */
 export interface UserCreateModel {
+  /**
+   * QQ number
+   * @maxLength 20
+   * @pattern ^[1-9][0-9]{4,19}$
+   */
+  qq?: string | null;
   /**
    * Username
    * @minLength 3
@@ -603,6 +619,12 @@ export interface AdminTeamModel {
 
 /** User information modification (Admin) */
 export interface AdminUserInfoModel {
+  /**
+   * QQ number
+   * @maxLength 20
+   * @pattern ^[1-9][0-9]{4,19}$
+   */
+  qq?: string | null;
   /**
    * Username
    * @minLength 3

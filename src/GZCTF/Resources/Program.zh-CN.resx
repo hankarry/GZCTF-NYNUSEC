@@ -821,6 +821,12 @@
   <data name="Model_MalformedPhoneNumber" xml:space="preserve">
     <value>手机号格式错误</value>
   </data>
+  <data name="Model_MalformedQQNumber" xml:space="preserve">
+    <value>QQ 号须为 5 至 20 位数字，且不能以 0 开头</value>
+  </data>
+  <data name="Model_QQTooLong" xml:space="preserve">
+    <value>QQ 号过长</value>
+  </data>
   <data name="Model_NewPasswordRequired" xml:space="preserve">
     <value>新密码是必需的</value>
   </data>

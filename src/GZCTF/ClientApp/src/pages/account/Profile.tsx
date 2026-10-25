@@ -43,6 +43,7 @@ const Profile: FC = () => {
     stdNumber: user?.stdNumber,
     phone: user?.phone,
     realName: user?.realName,
+    qq: user?.qq,
   })
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
 
@@ -66,6 +67,7 @@ const Profile: FC = () => {
       stdNumber: user?.stdNumber,
       phone: user?.phone,
       realName: user?.realName,
+      qq: user?.qq,
     })
   })
 
@@ -120,9 +122,11 @@ const Profile: FC = () => {
         message: t('account.notification.profile.profile_updated'),
         icon: <Icon path={mdiCheck} size={1} />,
       })
-      mutate({ ...user })
+      await mutate()
     } catch (e) {
       showErrorMsg(e, t)
+    } finally {
+      setDisabled(false)
     }
   }
 
@@ -200,6 +204,14 @@ const Profile: FC = () => {
             value={profile.realName ?? ''}
             disabled={disabled}
             onChange={(event) => setProfile({ ...profile, realName: event.target.value })}
+          />
+          <TextInput
+            label={t('account.label.qq')}
+            inputMode="numeric"
+            maxLength={20}
+            value={profile.qq ?? ''}
+            disabled={disabled}
+            onChange={(event) => setProfile({ ...profile, qq: event.target.value })}
           />
         </SimpleGrid>
         <Textarea

@@ -1118,6 +1118,11 @@ namespace GZCTF.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
+                    b.Property<string>("QQ")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.Property<DateTimeOffset>("RegisterTimeUtc")
                         .HasColumnType("timestamp with time zone");
 

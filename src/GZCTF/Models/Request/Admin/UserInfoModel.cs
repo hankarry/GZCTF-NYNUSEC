@@ -33,6 +33,11 @@ public class UserInfoModel
     public string? Phone { get; set; }
 
     /// <summary>
+    /// QQ number
+    /// </summary>
+    public string? QQ { get; set; }
+
+    /// <summary>
     /// Bio
     /// </summary>
     public string? Bio { get; set; }
@@ -81,6 +86,7 @@ public class UserInfoModel
             Role = user.Role,
             Email = user.Email,
             Phone = user.PhoneNumber,
+            QQ = user.QQ,
             Avatar = user.AvatarUrl,
             RealName = user.RealName,
             UserName = user.UserName,

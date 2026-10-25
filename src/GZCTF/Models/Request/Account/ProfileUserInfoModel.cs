@@ -46,6 +46,11 @@ public class ProfileUserInfoModel
     public string? StdNumber { get; set; }
 
     /// <summary>
+    /// QQ number
+    /// </summary>
+    public string? QQ { get; set; }
+
+    /// <summary>
     /// Avatar URL
     /// </summary>
     public string? Avatar { get; set; }
@@ -61,6 +66,7 @@ public class ProfileUserInfoModel
             Phone = user.PhoneNumber,
             Avatar = user.AvatarUrl,
             StdNumber = user.StdNumber,
+            QQ = user.QQ,
             Role = user.Role
         };
 }

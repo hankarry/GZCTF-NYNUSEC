@@ -98,6 +98,7 @@ public partial class UserInfo : IdentityUser<Guid>
         RealName = model.RealName ?? RealName;
         PhoneNumber = model.Phone ?? PhoneNumber;
         EmailConfirmed = model.EmailConfirmed ?? EmailConfirmed;
+        QQ = model.QQ ?? QQ;
     }
 
     /// <summary>
@@ -109,6 +110,7 @@ public partial class UserInfo : IdentityUser<Guid>
     {
         UserName = model.UserName;
         Email = model.Email;
+        QQ = model.QQ ?? QQ;
         StdNumber = model.StdNumber ?? StdNumber;
         RealName = model.RealName ?? RealName;
         PhoneNumber = model.Phone ?? PhoneNumber;
@@ -121,6 +123,7 @@ public partial class UserInfo : IdentityUser<Guid>
         PhoneNumber = model.Phone ?? PhoneNumber;
         RealName = model.RealName ?? RealName;
         StdNumber = model.StdNumber ?? StdNumber;
+        QQ = model.QQ ?? QQ;
     }
 
     #region Db Relationship
@@ -144,4 +147,12 @@ public partial class UserInfo : IdentityUser<Guid>
     public List<Team> Teams { get; set; } = [];
 
     #endregion
+
+    /// <summary>
+    /// QQ number, available only in the owner's and administrators' profile responses
+    /// </summary>
+    [MaxLength(Limits.MaxQQNumberLength)]
+    [ProtectedPersonalData]
+    [SuppressDefaultInitialization]
+    public string QQ { get; set; } = string.Empty;
 }

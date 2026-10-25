@@ -56,6 +56,15 @@ public class UserCreateModel
     public string? Phone { get; set; }
 
     /// <summary>
+    /// QQ number
+    /// </summary>
+    [MaxLength(Limits.MaxQQNumberLength, ErrorMessageResourceName = nameof(Resources.Program.Model_QQTooLong),
+        ErrorMessageResourceType = typeof(Resources.Program))]
+    [RegularExpression(@"^[1-9][0-9]{4,19}$", ErrorMessageResourceName = nameof(Resources.Program.Model_MalformedQQNumber),
+        ErrorMessageResourceType = typeof(Resources.Program))]
+    public string? QQ { get; set; }
+
+    /// <summary>
     /// Team the user joins
     /// </summary>
     [MaxLength(Limits.MaxTeamNameLength, ErrorMessageResourceName = nameof(Resources.Program.Model_TeamNameTooLong),
@@ -70,6 +79,7 @@ public class UserCreateModel
             RealName = RealName ?? "",
             StdNumber = StdNumber ?? "",
             PhoneNumber = Phone,
+            QQ = QQ ?? string.Empty,
             EmailConfirmed = true
         };
 }

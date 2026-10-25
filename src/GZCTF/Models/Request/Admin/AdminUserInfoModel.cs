@@ -52,6 +52,15 @@ public class AdminUserInfoModel
     public string? StdNumber { get; set; }
 
     /// <summary>
+    /// QQ number
+    /// </summary>
+    [MaxLength(Limits.MaxQQNumberLength, ErrorMessageResourceName = nameof(Resources.Program.Model_QQTooLong),
+        ErrorMessageResourceType = typeof(Resources.Program))]
+    [RegularExpression(@"^[1-9][0-9]{4,19}$", ErrorMessageResourceName = nameof(Resources.Program.Model_MalformedQQNumber),
+        ErrorMessageResourceType = typeof(Resources.Program))]
+    public string? QQ { get; set; }
+
+    /// <summary>
     /// Is email confirmed (can log in)
     /// </summary>
     public bool? EmailConfirmed { get; set; }
