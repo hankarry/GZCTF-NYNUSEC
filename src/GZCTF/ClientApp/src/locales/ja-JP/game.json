@@ -151,6 +151,7 @@
     "traffic": "トラフィック"
   },
   "notice": {
+    "challenge_closed": "チャレンジ「{{title}}」が非公開になりました",
     "blood": "チーム {{team}} は「{{chal}}」の{{blood}}を取りました。おめでとうございます！",
     "new_challenge": "チャレンジ「{{title}}」が開放されました",
     "new_hint": "チャレンジ「{{title}}」のヒントが更新されました"

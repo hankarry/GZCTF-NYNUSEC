@@ -8,8 +8,9 @@ public interface IGameNoticeRepository : IRepository
     /// <param name="notice"></param>
     /// <param name="token"></param>
     /// <param name="publish">Publish immediately, or defer until the caller commits its transaction</param>
+    /// <param name="enqueuePush">Queue a QQ push, unless the submission pipeline already handles it</param>
     /// <returns></returns>
-    public Task<GameNotice> AddNotice(GameNotice notice, CancellationToken token = default, bool publish = true);
+    public Task<GameNotice> AddNotice(GameNotice notice, CancellationToken token = default, bool publish = true, bool enqueuePush = true);
 
     /// <summary>
     /// Publish a persisted notice after its transaction has committed

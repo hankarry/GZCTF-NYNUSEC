@@ -151,6 +151,7 @@
     "traffic": "Trafic"
   },
   "notice": {
+    "challenge_closed": "Le défi [{{title}}] a été désactivé.",
     "blood": "Félicitations à {{team}} pour le {{blood}} sur {{chal}}.",
     "new_challenge": "Nouveau défi [{{title}}] a été publié.",
     "new_hint": "Des indices pour [{{title}}] ont été mis à jour."

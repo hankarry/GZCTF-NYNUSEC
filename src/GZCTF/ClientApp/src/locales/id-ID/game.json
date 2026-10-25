@@ -151,6 +151,7 @@
     "traffic": "Traffic"
   },
   "notice": {
+    "challenge_closed": "Tantangan [{{title}}] telah dinonaktifkan.",
     "blood": "Selamat kepada {{team}} atas {{blood}} di {{chal}}.",
     "new_challenge": "Challenge baru [{{title}}] telah dirilis.",
     "new_hint": "Petunjuk untuk [{{title}}] telah diperbarui."

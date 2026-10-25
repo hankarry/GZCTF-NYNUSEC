@@ -715,6 +715,7 @@ public class EditController(
             !model.IsValidFlagTemplate())
             return BadRequest(new RequestResponse(localizer[nameof(Resources.Program.Challenge_FlagTooTrivial)]));
 
+        var wasEnabled = res.IsEnabled;
         res.Update(model);
 
         switch (model.IsEnabled)
@@ -724,8 +725,6 @@ public class EditController(
                     // Will also update IsEnabled
                     await challengeRepository.EnsureInstances(res, game, token);
 
-                    if (game.IsActive)
-                        notices.Add(new() { Game = game, Type = NoticeType.NewChallenge, Values = [res.Title] });
                     break;
                 }
             case false when res.Type.IsContainer():
@@ -735,6 +734,12 @@ public class EditController(
                 // do nothing
                 break;
         }
+
+        if (game.IsActive && wasEnabled != res.IsEnabled)
+            notices.Add(new()
+            {
+                Game = game, Type = res.IsEnabled ? NoticeType.NewChallenge : NoticeType.ChallengeClosed, Values = [res.Title]
+            });
 
         var releasedHints = res.GetReleasedHints();
         var hasNewHints = releasedHints.GroupBy(hint => hint, StringComparer.Ordinal)

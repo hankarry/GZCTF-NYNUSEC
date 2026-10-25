@@ -799,6 +799,121 @@ namespace GZCTF.Migrations
                     b.ToTable("GameNotices");
                 });
 
+            modelBuilder.Entity("GZCTF.Models.Data.GamePushConfig", b =>
+                {
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("EndpointUrl")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<int>("EventMask")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("GroupId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("NoticeTemplate")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<string>("ProtectedAccessToken")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("Revision")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("SubmissionEventMask")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SubmissionTemplate")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.HasKey("GameId");
+
+                    b.ToTable("GamePushConfigs");
+                });
+
+            modelBuilder.Entity("GZCTF.Models.Data.GamePushDelivery", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ConfigRevision")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTimeOffset?>("LeaseExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("LeaseToken")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("NextAttemptAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("NoticeId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("SentAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("SubmissionId")
+                        .HasColumnType("integer");
+
+                    b.Property<short?>("SubmissionResult")
+                        .HasColumnType("smallint");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("smallint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NoticeId")
+                        .IsUnique();
+
+                    b.HasIndex("SubmissionId")
+                        .IsUnique();
+
+                    b.HasIndex("GameId", "Id");
+
+                    b.HasIndex("Status", "NextAttemptAtUtc");
+
+                    b.ToTable("GamePushDeliveries");
+                });
+
             modelBuilder.Entity("GZCTF.Models.Data.LocalFile", b =>
                 {
                     b.Property<int>("Id")
@@ -1113,15 +1228,15 @@ namespace GZCTF.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("RealName")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
                     b.Property<string>("QQ")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
+
+                    b.Property<string>("RealName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
 
                     b.Property<DateTimeOffset>("RegisterTimeUtc")
                         .HasColumnType("timestamp with time zone");
@@ -1700,6 +1815,42 @@ namespace GZCTF.Migrations
                         .IsRequired();
 
                     b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("GZCTF.Models.Data.GamePushConfig", b =>
+                {
+                    b.HasOne("GZCTF.Models.Data.Game", "Game")
+                        .WithOne()
+                        .HasForeignKey("GZCTF.Models.Data.GamePushConfig", "GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
+            modelBuilder.Entity("GZCTF.Models.Data.GamePushDelivery", b =>
+                {
+                    b.HasOne("GZCTF.Models.Data.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GZCTF.Models.Data.GameNotice", "Notice")
+                        .WithOne()
+                        .HasForeignKey("GZCTF.Models.Data.GamePushDelivery", "NoticeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GZCTF.Models.Data.Submission", "Submission")
+                        .WithOne()
+                        .HasForeignKey("GZCTF.Models.Data.GamePushDelivery", "SubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Game");
+
+                    b.Navigation("Notice");
+
+                    b.Navigation("Submission");
                 });
 
             modelBuilder.Entity("GZCTF.Models.Data.Participation", b =>

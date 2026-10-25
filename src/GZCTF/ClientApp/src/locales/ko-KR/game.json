@@ -151,6 +151,7 @@
     "traffic": "트래픽"
   },
   "notice": {
+    "challenge_closed": "문제 [{{title}}]가 비활성화되었습니다.",
     "blood": "{{team}} 팀이 {{chal}} 의 {{blood}}  를 가져갔습니다!",
     "new_challenge": "새로운 문제 [{{title}}] 가 생성되었습니다.",
     "new_hint": "[{{title}}] 문제 힌트가 업데이트되었습니다."

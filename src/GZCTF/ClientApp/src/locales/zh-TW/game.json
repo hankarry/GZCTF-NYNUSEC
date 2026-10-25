@@ -151,6 +151,7 @@
     "traffic": "流量"
   },
   "notice": {
+    "challenge_closed": "題目 [{{title}}] 已下線",
     "blood": "恭喜 {{team}} 獲得 [{{chal}}] {{blood}}",
     "new_challenge": "題目 [{{title}}] 已開放",
     "new_hint": "題目 [{{title}}] 更新了提示"

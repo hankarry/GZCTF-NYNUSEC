@@ -151,6 +151,7 @@
     "traffic": "Traffic"
   },
   "notice": {
+    "challenge_closed": "Thử thách [{{title}}] đã được tắt.",
     "blood": "Chúc mừng đội {{team}} đã {{blood}} thử thách {{chal}}.",
     "new_challenge": "Challenge mới [{{title}}] đã được mở.",
     "new_hint": "Gợi ý cho [{{title}}] đã được cập nhật."

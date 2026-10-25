@@ -309,13 +309,10 @@ public class GameInstanceRepository(
                 return new(SubmissionType.Unaccepted, updateSub.Status);
             }
 
-            // Acquire a PostgresSQL advisory lock to prevent race conditions:
-            // This lock ensures that only one concurrent submission for the same participation/challenge pair
-            // can proceed past this point, preventing duplicate FirstSolve entries if multiple submissions
-            // are processed at the same time. Without this, two submissions could both pass the check and
-            // insert duplicate records.
+            // Serialize first solves for this challenge, including different teams, so concurrent
+            // correct submissions cannot receive the same blood award or create duplicate first solves.
             await Context.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock({0}, {1})",
-                [updateSub.ParticipationId, updateSub.ChallengeId],
+                [-1, updateSub.ChallengeId],
                 cancellationToken: token);
 
             var alreadySolved = await Context.FirstSolves

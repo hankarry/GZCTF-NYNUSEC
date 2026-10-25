@@ -29,7 +29,12 @@ const ApplyFilter = (notices: GameNotice[], filter: NoticeFilter) => {
     case NoticeFilter.All:
       return notices
     case NoticeFilter.Challenge:
-      return notices.filter((notice) => notice.type === NoticeType.NewChallenge || notice.type === NoticeType.NewHint)
+      return notices.filter(
+        (notice) =>
+          notice.type === NoticeType.NewChallenge ||
+          notice.type === NoticeType.NewHint ||
+          notice.type === NoticeType.ChallengeClosed
+      )
     case NoticeFilter.Events:
       return notices.filter(
         (notice) =>
@@ -56,6 +61,8 @@ const formatNotice = (t: TFunction, notice: GameNotice) => {
       return t('game.notice.new_hint', {
         title: notice.values.at(0),
       })
+    case NoticeType.ChallengeClosed:
+      return t('game.notice.challenge_closed', { title: notice.values.at(0) })
     case NoticeType.FirstBlood:
       return t('game.notice.blood', {
         team: notice.values.at(0),
@@ -125,7 +132,11 @@ export const GameNoticePanel: FC = () => {
           )
         }
 
-        if (message.type === NoticeType.NewChallenge || message.type === NoticeType.NewHint) {
+        if (
+          message.type === NoticeType.NewChallenge ||
+          message.type === NoticeType.NewHint ||
+          message.type === NoticeType.ChallengeClosed
+        ) {
           showNotification({
             color: 'yellow',
             message: formatNotice(t, message),

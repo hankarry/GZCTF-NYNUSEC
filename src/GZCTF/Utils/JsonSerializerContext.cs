@@ -8,6 +8,7 @@ using GZCTF.Models.Request.Edit;
 using GZCTF.Models.Request.Game;
 using GZCTF.Models.Request.Info;
 using GZCTF.Services.Container.Provider;
+using GZCTF.Services.Push;
 using Namotion.Reflection;
 using NJsonSchema;
 using NJsonSchema.Generation;
@@ -47,6 +48,9 @@ namespace GZCTF.Utils;
 [JsonSerializable(typeof(ArrayResponse<GameInfoModel>))]
 [JsonSerializable(typeof(GameNotice))]
 [JsonSerializable(typeof(GameNotice[]))]
+[JsonSerializable(typeof(GamePushConfigModel))]
+[JsonSerializable(typeof(GamePushDeliveryModel[]))]
+[JsonSerializable(typeof(NapCatSendGroupRequest))]
 [JsonSerializable(typeof(ChallengeEditDetailModel))]
 [JsonSerializable(typeof(ChallengeInfoModel[]))]
 [JsonSerializable(typeof(ContainerInfoModel))]

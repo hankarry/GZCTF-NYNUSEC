@@ -9,11 +9,13 @@ using GZCTF.Services.Config;
 using GZCTF.Services.Container;
 using GZCTF.Services.CronJob;
 using GZCTF.Services.Mail;
+using GZCTF.Services.Push;
 using GZCTF.Services.Token;
 using GZCTF.Services.Traffic;
 using GZCTF.Services.Transfer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Http.Resilience;
 
 namespace GZCTF.Extensions.Startup;
 
@@ -85,6 +87,17 @@ internal static class ServicesExtension
             builder.Services.AddScoped<ExcelHelper>();
             builder.Services.AddScoped<GameExportService>();
             builder.Services.AddScoped<GameImportService>();
+            builder.Services.AddScoped<GamePushQueue>();
+            builder.Services.AddScoped<GamePushDispatcher>();
+            // The durable outbox owns retries; HTTP-layer retries could duplicate QQ messages.
+            builder.Services.AddHttpClient<NapCatClient>(client => client.Timeout = TimeSpan.FromSeconds(10))
+                .ConfigureAdditionalHttpMessageHandlers((handlers, _) =>
+                {
+                    for (var index = handlers.Count - 1; index >= 0; index--)
+                        if (handlers[index] is ResilienceHandler)
+                            handlers.RemoveAt(index);
+                })
+                .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 
             builder.Services.AddChannel<Submission>();
             builder.Services.AddChannel<CacheRequest>();
@@ -95,6 +108,7 @@ internal static class ServicesExtension
             builder.Services.AddHostedService<CacheMaker>();
             builder.Services.AddHostedService<FlagChecker>();
             builder.Services.AddHostedService<CronJobService>();
+            builder.Services.AddHostedService<GamePushWorker>();
         }
 
         internal void AddWebServices()

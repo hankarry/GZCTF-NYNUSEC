@@ -1,4 +1,55 @@
 {
+  "push": {
+    "all_submissions": "推送所有提交結果",
+    "submission_description": "包含通過、錯誤、作弊嫌疑和實例不存在。與上方三血事件同時勾選時，同一次提交僅推送一次。",
+    "submission_events": "提交結果",
+    "results": {
+      "accepted": "通過",
+      "wrong_answer": "錯誤",
+      "cheat_detected": "作弊嫌疑",
+      "not_found": "實例不存在"
+    },
+    "submission_template": "提交通知範本",
+    "notice_template": "比賽通知範本",
+    "preview": "格式預覽（範例資料）",
+    "submission_variables": "變數：{game} 比賽、{team} 隊伍、{member} 成員、{challenge} 題目、{result} 結果、{solve_rank} 名次標記、{rank} 名次數字、{blood} 血次、{time} 時間、{submission_id} 提交編號。{{ 和 }} 表示普通大括號。",
+    "notice_variables": "變數：{game} 比賽、{event} 事件、{content} 通知內容、{challenge} 題目、{time} 時間。範本最多 4000 字。",
+    "rank_description": "{rank} 表示該題被不同隊伍首次解出的順序；{solve_rank} 顯示血次獎牌或「第N名」。錯誤與重複正確提交不產生新名次，血次遵循比賽權限設定。",
+    "submission_event": "提交",
+    "sample_team": "隊伍名",
+    "sample_member": "成員名",
+    "sample_challenge": "題目名",
+    "sample_notice": "📢 比賽公告：範例公告。",
+    "title": "QQ 群推送",
+    "description": "僅推送目前比賽進行期間產生且勾選的事件。每場比賽可單獨設定目標群聊與事件類型。",
+    "enabled": "啟用 QQ 群推送",
+    "endpoint": "NapCat HTTP API 位址",
+    "endpoint_description": "填寫 NapCat 的 HTTP 服務位址，而非 WebUI 位址；該位址須能從 GZCTF 伺服器存取。",
+    "group_id": "目標 QQ 群號",
+    "token_saved": "已儲存 Token。留空保留，填寫則替換。",
+    "token_optional": "NapCat 未啟用 HTTP 驗證時可留空。",
+    "clear_token": "清除已儲存的 Token",
+    "event_types": "推送事件",
+    "events": {
+      "new_challenge": "題目上線",
+      "challenge_closed": "題目下線",
+      "new_hint": "提示啟用",
+      "normal": "比賽公告"
+    },
+    "saved": "QQ 群推送設定已儲存",
+    "test_sent": "測試訊息已傳送至目標 QQ 群",
+    "save_test": "儲存並傳送測試訊息",
+    "deliveries": "最近推送紀錄",
+    "refresh": "重新整理",
+    "no_deliveries": "尚未產生推送工作。",
+    "attempts": "已嘗試 {{count}} 次",
+    "status": {
+      "Pending": "等待或重試中",
+      "Sent": "已傳送",
+      "Failed": "傳送失敗",
+      "Cancelled": "已取消"
+    }
+  },
   "button": {
     "back": "返回上級",
     "challenges": {
@@ -607,7 +658,8 @@
       "info": "信息編輯",
       "notices": "比賽公告",
       "review": "隊伍審核",
-      "writeups": "Writeups"
+      "writeups": "Writeups",
+      "push": "訊息推送"
     },
     "instances": "實例管理",
     "logs": "系統日誌",

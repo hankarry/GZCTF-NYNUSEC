@@ -96,6 +96,55 @@ export enum NoticeType {
   ThirdBlood = "ThirdBlood",
   NewHint = "NewHint",
   NewChallenge = "NewChallenge",
+  ChallengeClosed = "ChallengeClosed",
+}
+
+/** Push delivery status 推送状态 */
+export enum PushDeliveryStatus {
+  Pending = "Pending",
+  Sent = "Sent",
+  Failed = "Failed",
+  Cancelled = "Cancelled",
+}
+
+/** Challenge category 比赛分类 */
+export interface GamePushConfigModel {
+  enabled: boolean;
+  endpointUrl: string;
+  groupId: string;
+  hasAccessToken: boolean;
+  events: NoticeType[];
+  submissionEvents: AnswerResult[];
+  submissionTemplate: string;
+  noticeTemplate: string;
+}
+
+/** Game push notification settings 游戏推送通知设置 */
+export interface GamePushSettingsModel {
+  enabled: boolean;
+  endpointUrl: string;
+  groupId: string;
+  accessToken?: string | null;
+  clearAccessToken?: boolean;
+  events: NoticeType[];
+  submissionEvents: AnswerResult[];
+  submissionTemplate: string;
+  noticeTemplate: string;
+}
+
+/** Game push notification delivery 游戏推送通知发送 */
+export interface GamePushDeliveryModel {
+  id: number;
+  noticeId?: number | null;
+  submissionId?: number | null;
+  submissionResult?: AnswerResult | null;
+  message: string;
+  type: NoticeType;
+  status: PushDeliveryStatus;
+  attemptCount: number;
+  createdAtUtc: number;
+  sentAtUtc?: number | null;
+  lastError?: string | null;
 }
 
 /** Challenge category */
@@ -3534,6 +3583,66 @@ export class Api<
         ...params,
       }),
   };
+  gamePush = {
+    /// <summary>
+    /// Get game push notification settings
+    /// 比赛推送通知设置
+    /// </summary>
+
+    /** 
+     * @description 获取比赛推送通知设置
+     * 
+     * @tags GamePush
+     * @name GamePushGetSettings
+     * @summary Get game push notification settings
+     * @request GET:/api/edit/games/{gameId}/push
+     */
+    gamePushGetSettings: (
+      gameId: number, params: RequestParams = {}) =>
+      this.request<GamePushConfigModel, RequestResponse>({
+        path: `/api/edit/games/${gameId}/push`, method: "GET", format: "json", ...params,
+      }),
+
+    /**
+     * @description 更新比赛推送通知设置
+     * 
+     * @tags GamePush
+     * @name GamePushUpdateSettings
+     * @summary Update game push notification settings
+     * @request PUT:/api/edit/games/{gameId}/push 
+     */
+    gamePushUpdateSettings: (gameId: number, data: GamePushSettingsModel, params: RequestParams = {}) =>
+      this.request<GamePushConfigModel, RequestResponse>({
+        path: `/api/edit/games/${gameId}/push`, method: "PUT", body: data, type: ContentType.Json, format: "json", ...params,
+      }),
+
+    /**
+     * @description 测试比赛推送通知设置
+     * 
+     * @tags GamePush
+     * @name GamePushTest
+     * @summary Test game push notification settings
+     * @request POST:/api/edit/games/{gameId}/push/test
+     */
+    gamePushTest: (gameId: number, params: RequestParams = {}) =>
+      this.request<RequestResponse, RequestResponse>({
+        path: `/api/edit/games/${gameId}/push/test`, method: "POST", format: "json", ...params,
+      }),
+
+    /**
+     * @description 获取比赛推送通知发送记录
+     * 
+     * @tags GamePush
+     * @name GamePushGetDeliveries
+     * @summary Get game push notification deliveries
+     * @request GET:/api/edit/games/{gameId}/push/deliveries
+     */
+    gamePushGetDeliveries: (gameId: number, params: RequestParams = {}) =>
+      this.request<GamePushDeliveryModel[], RequestResponse>({
+        path: `/api/edit/games/${gameId}/push/deliveries`, method: "GET", format: "json", ...params,
+      }),
+  };
+
   edit = {
     /**
      * @description Adding a game challenge flag requires administrator privileges

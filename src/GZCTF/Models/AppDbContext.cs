@@ -30,6 +30,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) :
     public DbSet<Submission> Submissions { get; set; } = null!;
     public DbSet<Attachment> Attachments { get; set; } = null!;
     public DbSet<GameNotice> GameNotices { get; set; } = null!;
+    public DbSet<GamePushConfig> GamePushConfigs { get; set; } = null!;
+    public DbSet<GamePushDelivery> GamePushDeliveries { get; set; } = null!;
     public DbSet<FlagContext> FlagContexts { get; set; } = null!;
     public DbSet<Participation> Participations { get; set; } = null!;
     public DbSet<GameInstance> GameInstances { get; set; } = null!;
@@ -378,6 +380,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) :
                 .HasConversion(listConverter)
                 .Metadata
                 .SetValueComparer(listComparer);
+        });
+
+        builder.Entity<GamePushConfig>().HasOne(config => config.Game).WithOne()
+            .HasForeignKey<GamePushConfig>(config => config.GameId).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<GamePushDelivery>(entity =>
+        {
+            entity.HasOne(delivery => delivery.Notice).WithOne()
+                .HasForeignKey<GamePushDelivery>(delivery => delivery.NoticeId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(delivery => delivery.Submission).WithOne()
+                .HasForeignKey<GamePushDelivery>(delivery => delivery.SubmissionId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(delivery => delivery.Game).WithMany()
+                .HasForeignKey(delivery => delivery.GameId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasIndex(delivery => new { delivery.Status, delivery.NextAttemptAtUtc });
+            entity.HasIndex(delivery => new { delivery.GameId, delivery.Id });
         });
 
         builder.Entity<GameEvent>(entity =>

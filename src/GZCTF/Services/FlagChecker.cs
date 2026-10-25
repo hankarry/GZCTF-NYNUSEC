@@ -1,6 +1,7 @@
 ﻿using System.Threading.Channels;
 using GZCTF.Repositories.Interface;
 using GZCTF.Services.Cache;
+using GZCTF.Services.Push;
 using Microsoft.EntityFrameworkCore;
 
 namespace GZCTF.Services;
@@ -164,13 +165,15 @@ public class FlagChecker(
                             }
                     }
 
+                    item.Status = ans;
+                    await scope.ServiceProvider.GetRequiredService<GamePushQueue>().EnqueueSubmissionAsync(item, type, token);
+
                     if (item.Game!.EndTimeUtc > DateTimeOffset.UtcNow
                         && type != SubmissionType.Unaccepted
                         && type != SubmissionType.Normal)
                         await gameNoticeRepository.AddNotice(
-                            GameNotice.FromSubmission(item, type, StaticLocalizer), token);
+                            GameNotice.FromSubmission(item, type, StaticLocalizer), token, enqueuePush: false);
 
-                    item.Status = ans;
                     await submissionRepository.SendSubmission(item);
                 }
                 catch (DbUpdateConcurrencyException)

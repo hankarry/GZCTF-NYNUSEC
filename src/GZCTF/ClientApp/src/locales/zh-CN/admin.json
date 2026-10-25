@@ -1,4 +1,55 @@
 {
+  "push": {
+    "all_submissions": "推送所有提交结果",
+    "submission_description": "包含通过、错误、作弊嫌疑和实例不存在。",
+    "submission_events": "提交结果",
+    "results": {
+      "accepted": "通过",
+      "wrong_answer": "错误",
+      "cheat_detected": "作弊嫌疑",
+      "not_found": "实例不存在"
+    },
+    "submission_template": "提交通知模板",
+    "notice_template": "比赛通知模板",
+    "preview": "格式预览",
+    "submission_variables": "变量：{game} 比赛、{team} 队伍、{member} 成员、{challenge} 题目、{result} 结果、{solve_rank} 名次标记、{rank} 名次数字、{blood} 血次、{time} 时间、{submission_id} 提交编号。{{ 和 }} 表示普通花括号。",
+    "notice_variables": "变量：{game} 比赛、{event} 事件、{content} 通知内容、{challenge} 题目、{time} 时间。模板最多 4000 字。",
+    "rank_description": "{rank} 表示该题被不同队伍首次解出的顺序；{solve_rank} 显示血次奖牌或“第N名”。错误与重复正确提交不产生新名次，血次遵循比赛权限设置。",
+    "submission_event": "提交",
+    "sample_team": "队伍名",
+    "sample_member": "成员名",
+    "sample_challenge": "题目名",
+    "sample_notice": "📢 比赛公告：示例公告。",
+    "title": "QQ群推送",
+    "description": "仅推送当前比赛进行期间产生且勾选的事件。每场比赛可单独配置目标群聊和事件类型。",
+    "enabled": "启用QQ群推送",
+    "endpoint": "NapCat HTTP API 地址",
+    "endpoint_description": "NapCat 的 HTTP 服务地址",
+    "group_id": "目标QQ群号",
+    "token_saved": "Token已保存。留空保留，填写则替换。",
+    "token_optional": "NapCat 未启用 HTTP 鉴权时可留空。",
+    "clear_token": "清除已保存的Token",
+    "event_types": "推送事件",
+    "events": {
+      "new_challenge": "题目上线",
+      "challenge_closed": "题目下线",
+      "new_hint": "提示启用",
+      "normal": "比赛公告"
+    },
+    "saved": "推送配置已保存",
+    "test_sent": "测试消息已发送至目标QQ群",
+    "save_test": "保存并发送测试消息",
+    "deliveries": "最近推送记录",
+    "refresh": "刷新",
+    "no_deliveries": "尚未产生推送任务。",
+    "attempts": "已尝试 {{count}} 次",
+    "status": {
+      "Pending": "等待或重试中",
+      "Sent": "已发送",
+      "Failed": "发送失败",
+      "Cancelled": "已取消"
+    }
+  },
   "button": {
     "back": "返回上级",
     "challenges": {
@@ -627,7 +678,8 @@
       "info": "信息编辑",
       "notices": "比赛公告",
       "review": "队伍审核",
-      "writeups": "Writeups"
+      "writeups": "Writeups",
+      "push": "消息推送"
     },
     "instances": "实例管理",
     "logs": "系统日志",

@@ -2,6 +2,7 @@
 using GZCTF.Hubs.Clients;
 using GZCTF.Repositories.Interface;
 using GZCTF.Services.Cache;
+using GZCTF.Services.Push;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,11 +13,13 @@ public class GameNoticeRepository(
     CacheHelper cacheHelper,
     ILogger<GameNoticeRepository> logger,
     IHubContext<UserHub, IUserClient> hub,
+    GamePushQueue pushQueue,
     AppDbContext context) : RepositoryBase(context), IGameNoticeRepository
 {
-    public async Task<GameNotice> AddNotice(GameNotice notice, CancellationToken token = default, bool publish = true)
+    public async Task<GameNotice> AddNotice(GameNotice notice, CancellationToken token = default, bool publish = true, bool enqueuePush = true)
     {
         await Context.AddAsync(notice, token);
+        if (enqueuePush) await pushQueue.EnqueueAsync(notice, token);
         await SaveAsync(token);
 
         if (publish)

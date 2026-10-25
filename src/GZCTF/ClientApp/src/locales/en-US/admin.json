@@ -1,4 +1,56 @@
 {
+  "push": {
+    "all_submissions": "Push all submission results",
+    "submission_description": "Includes correct, incorrect, suspected cheating and missing-instance results. Blood events are sent only once even if also selected above.",
+    "submission_events": "Submission results",
+    "results": {
+      "accepted": "Accepted",
+      "wrong_answer": "Wrong answer",
+      "cheat_detected": "Suspected cheating",
+      "not_found": "Instance not found"
+    },
+    "submission_template": "Submission notification template",
+    "notice_template": "Notice notification template",
+    "preview": "Preview (sample data)",
+    "submission_variables": "Variables: {game} {team} {member} {challenge} {result} {solve_rank} {rank} {blood} {time} {submission_id}. Use {{ and }} for literal braces.",
+    "notice_variables": "Variables: {game} {event} {content} {challenge} {time}. Maximum 4000 characters.",
+    "rank_description": "{rank} counts the teams that first solved this challenge, rather than the overall standings. {solve_rank} shows a blood medal or 第N名. Failed and repeated correct submissions have no new rank. Blood labels follow the game permissions.",
+    "submission_event": "Submission",
+    "sample_team": "Team name",
+    "sample_member": "Member name",
+    "sample_challenge": "Challenge name",
+    "sample_notice": "📢 Contest announcement: Sample announcement.",
+    "title": "QQ group push",
+    "description": "Push selected events from this game while it is running. Each game has its own destination and event selection.",
+    "enabled": "Enable QQ group push",
+    "endpoint": "NapCat HTTP API base URL",
+    "endpoint_description": "Use the NapCat HTTP server address, not its WebUI address. The address must be reachable from the GZCTF server.",
+    "group_id": "Destination QQ group ID",
+    "token_saved": "A token is saved. Leave blank to keep it, or enter a replacement.",
+    "token_optional": "Optional when the NapCat HTTP server does not require authentication.",
+    "clear_token": "Clear the saved access token",
+    "event_types": "Events to push",
+    "events": {
+      "new_challenge": "Challenge published",
+      "challenge_closed": "Challenge taken offline",
+      "new_hint": "Hint released",
+      "normal": "Game announcement"
+    },
+    "saved": "QQ push settings saved",
+    "test_sent": "Test message sent to the configured QQ group",
+    "save_test": "Save and send test",
+    "deliveries": "Recent deliveries",
+    "refresh": "Refresh",
+    "no_deliveries": "No queued game messages yet.",
+    "attempts_one": "{{count}} attempt",
+    "attempts_other": "{{count}} attempts",
+    "status": {
+      "Pending": "Pending / retrying",
+      "Sent": "Sent",
+      "Failed": "Failed",
+      "Cancelled": "Cancelled"
+    }
+  },
   "button": {
     "back": "Go Back",
     "challenges": {
@@ -627,7 +679,8 @@
       "info": "Information",
       "notices": "Notices",
       "review": "Teams",
-      "writeups": "Writeups"
+      "writeups": "Writeups",
+      "push": "Message push"
     },
     "instances": "Instances",
     "logs": "Logs",

@@ -180,7 +180,12 @@ public enum NoticeType : byte
     /// <summary>
     /// New challenge released
     /// </summary>
-    NewChallenge = 5
+    NewChallenge = 5,
+
+    /// <summary>
+    /// Challenge taken offline
+    /// </summary>
+    ChallengeClosed = 6
 }
 
 /// <summary>

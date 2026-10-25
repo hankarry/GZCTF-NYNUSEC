@@ -351,6 +351,7 @@ export const NoticTypeIconMap = (size: number) => {
       [NoticeType.Normal, { path: mdiBullhornOutline, size: size, color: theme.colors[theme.primaryColor][colorIdx] }],
       [NoticeType.NewHint, { path: mdiLightbulbOnOutline, size: size, color: theme.colors.yellow[colorIdx] }],
       [NoticeType.NewChallenge, { path: mdiPlus, size: size, color: theme.colors.green[colorIdx] }],
+      [NoticeType.ChallengeClosed, { path: mdiClose, size: size, color: theme.colors.red[colorIdx] }],
       [NoticeType.FirstBlood, iconMap.get(SubmissionType.FirstBlood)],
       [NoticeType.SecondBlood, iconMap.get(SubmissionType.SecondBlood)],
       [NoticeType.ThirdBlood, iconMap.get(SubmissionType.ThirdBlood)],
