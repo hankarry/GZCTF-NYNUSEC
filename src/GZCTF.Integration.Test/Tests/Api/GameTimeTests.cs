@@ -11,6 +11,7 @@ using GZCTF.Models.Request.Edit;
 using GZCTF.Models.Request.Game;
 using GZCTF.Services;
 using GZCTF.Services.Container.Manager;
+using GZCTF.Services.Push;
 using GZCTF.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -196,6 +197,187 @@ public class GameTimeTests(GameTimeTestFactory factory)
         await Process(day.AddDays(1).AddHours(12));
         using (var scope = factory.Services.CreateScope())
             Assert.Equal(2, await scope.ServiceProvider.GetRequiredService<AppDbContext>().GameNotices.CountAsync(notice => notice.GameId == game.Id));
+    }
+
+    [Fact]
+    public async Task BlackoutEnd_CustomMessageIsEditableAndDeliveredOnceAtTheUpdatedBoundary()
+    {
+        using var admin = await Login(Role.Admin);
+        var game = await TestDataSeeder.CreateGameAsync(factory.Services, "Ending notification game");
+        var now = DateTimeOffset.UtcNow;
+        var input = new BlackoutInput
+        {
+            Name = "Break", StartAtUtc = now.AddMinutes(-1), EndAtUtc = now.AddMinutes(10),
+            Message = "暂停比赛", EndMessage = "恢复比赛"
+        };
+        var response = await admin.PostAsJsonAsync(Url(game.Id) + "/blackouts", input);
+        response.EnsureSuccessStatusCode();
+        var saved = (await response.Content.ReadFromJsonAsync<BlackoutModel>(JsonOptions))!;
+        Assert.Equal(input.EndMessage, saved.EndMessage);
+        (await admin.PutAsJsonAsync($"/api/edit/games/{game.Id}/push", new GamePushSettingsModel
+        {
+            Enabled = true, EndpointUrl = "http://napcat.test", GroupId = "12345", Events = [NoticeType.Normal]
+        })).EnsureSuccessStatusCode();
+        await Process(now);
+        await Process(now.AddMinutes(9));
+        input.EndMessage = "禁赛结束，请重新创建容器后继续答题。";
+        input.EndAtUtc = now.AddMinutes(20);
+        (await admin.PutAsJsonAsync(Url(game.Id) + $"/blackouts/{saved.Id}", input)).EnsureSuccessStatusCode();
+        await Process(now.AddMinutes(10));
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            Assert.Single(await db.GameNotices.Where(notice => notice.GameId == game.Id).ToArrayAsync());
+        }
+        var settings = (await admin.GetFromJsonAsync<GameTimeSettingsModel>(Url(game.Id), JsonOptions))!;
+        Assert.Equal(input.EndMessage, Assert.Single(settings.Blackouts).EndMessage);
+        await Task.WhenAll(Process(now.AddMinutes(20)), Process(now.AddMinutes(20)));
+        await Process(now.AddMinutes(21));
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var notices = await db.GameNotices.Where(notice => notice.GameId == game.Id).OrderBy(notice => notice.Id).ToArrayAsync();
+            Assert.Equal(new[] { input.Message, input.EndMessage }, notices.Select(notice => notice.Values!.Last()));
+            var deliveries = await db.GamePushDeliveries.Where(delivery => delivery.GameId == game.Id).ToArrayAsync();
+            Assert.Equal(2, deliveries.Length);
+            Assert.Single(deliveries, delivery => delivery.Message.Contains(input.EndMessage));
+            Assert.Null((await db.GameBlackouts.SingleAsync(rule => rule.Id == saved.Id)).PendingEndAtUtc);
+        }
+        input.EndMessage = " ";
+        Assert.Equal(HttpStatusCode.BadRequest, (await admin.PutAsJsonAsync(Url(game.Id) + $"/blackouts/{saved.Id}", input)).StatusCode);
+        input.EndMessage = new string('x', 4001);
+        Assert.Equal(HttpStatusCode.BadRequest, (await admin.PutAsJsonAsync(Url(game.Id) + $"/blackouts/{saved.Id}", input)).StatusCode);
+    }
+
+    [Theory]
+    [InlineData(12, 13)]
+    [InlineData(22, 2)]
+    public async Task DailyBlackouts_EndOnceForEachDayIncludingOvernightPeriods(int startHour, int endHour)
+    {
+        var day = new DateTimeOffset(DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(8)).Date, TimeSpan.FromHours(8));
+        var game = await TestDataSeeder.CreateGameAsync(factory.Services, "Daily ending", start: day.AddDays(-1).ToUniversalTime(), end: day.AddDays(4).ToUniversalTime());
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.GameBlackouts.Add(new()
+            {
+                GameId = game.Id, Name = "Daily break", Daily = true, StartMinute = startHour * 60,
+                EndMinute = endHour * 60, Message = "每天暂停", EndMessage = "每天结束"
+            });
+            await db.SaveChangesAsync();
+        }
+        for (var occurrence = 0; occurrence < 2; occurrence++)
+        {
+            var start = day.AddDays(occurrence).AddHours(startHour);
+            var end = day.AddDays(occurrence + (endHour < startHour ? 1 : 0)).AddHours(endHour);
+            await Process(start);
+            await Process(end.AddSeconds(-1));
+            await Process(end);
+            await Process(end.AddSeconds(1));
+        }
+        using (var scope = factory.Services.CreateScope())
+        {
+            var messages = await scope.ServiceProvider.GetRequiredService<AppDbContext>().GameNotices
+                .Where(notice => notice.GameId == game.Id).OrderBy(notice => notice.Id).ToArrayAsync();
+            Assert.Equal(new[] { "每天暂停", "每天结束", "每天暂停", "每天结束" }, messages.Select(notice => notice.Values!.Last()));
+        }
+    }
+
+    [Fact]
+    public async Task BlackoutEnd_DoesNotNotifyForUnobservedOrMutedPeriods()
+    {
+        using var admin = await Login(Role.Admin);
+        var game = await TestDataSeeder.CreateGameAsync(factory.Services, "Quiet periods");
+        var now = DateTimeOffset.UtcNow;
+        var muted = new BlackoutInput
+        {
+            Name = "Muted", StartAtUtc = now.AddMinutes(-1), EndAtUtc = now.AddMinutes(1),
+            Notify = false, Message = "", EndMessage = ""
+        };
+        (await admin.PostAsJsonAsync(Url(game.Id) + "/blackouts", muted)).EnsureSuccessStatusCode();
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.GameBlackouts.Add(new()
+            {
+                GameId = game.Id, Name = "Missed interval", StartAtUtc = now.AddMinutes(-3),
+                EndAtUtc = now.AddMinutes(-2), EndMessage = "不得补发"
+            });
+            await db.SaveChangesAsync();
+        }
+        await Process(now);
+        await Process(now.AddMinutes(1));
+        await Process(now.AddMinutes(2));
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            Assert.Empty(await db.GameNotices.Where(notice => notice.GameId == game.Id).ToArrayAsync());
+            Assert.Empty(await db.GamePushDeliveries.Where(delivery => delivery.GameId == game.Id).ToArrayAsync());
+        }
+    }
+
+    [Fact]
+    public async Task BlackoutEnd_TracksAnExistingActivePeriodWithoutRepeatingItsStart()
+    {
+        var game = await TestDataSeeder.CreateGameAsync(factory.Services, "Existing blackout");
+        var now = DateTimeOffset.UtcNow;
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.GameBlackouts.Add(new()
+            {
+                GameId = game.Id, Name = "Existing", StartAtUtc = now.AddMinutes(-1), EndAtUtc = now.AddMinutes(1),
+                LastStartedAtUtc = now.AddMinutes(-1), PendingEndAtUtc = null, EndMessage = "已结束"
+            });
+            await db.SaveChangesAsync();
+        }
+        await Process(now);
+        await Process(now.AddMinutes(1));
+        await Process(now.AddMinutes(2));
+        using (var scope = factory.Services.CreateScope())
+        {
+            var notices = await scope.ServiceProvider.GetRequiredService<AppDbContext>().GameNotices.Where(notice => notice.GameId == game.Id).ToArrayAsync();
+            Assert.Equal("已结束", Assert.Single(notices).Values!.Last());
+        }
+    }
+
+    [Fact]
+    public async Task BlackoutEnd_QueuesAndDeliversWhenTheGameEndsAtTheSameTime()
+    {
+        using var admin = await Login(Role.Admin);
+        var now = DateTimeOffset.UtcNow;
+        var end = now.AddSeconds(-1);
+        var start = now.AddMinutes(-3);
+        var game = await TestDataSeeder.CreateGameAsync(factory.Services, "Final blackout", start: now.AddHours(-1), end: end);
+        (await admin.PutAsJsonAsync($"/api/edit/games/{game.Id}/push", new GamePushSettingsModel
+        {
+            Enabled = true, EndpointUrl = "http://napcat.test", GroupId = "987650001", Events = [NoticeType.Normal]
+        })).EnsureSuccessStatusCode();
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            db.GameBlackouts.Add(new()
+            {
+                GameId = game.Id, Name = "Final", StartAtUtc = start, EndAtUtc = end,
+                LastStartedAtUtc = start, PendingEndAtUtc = end, EndMessage = "最终禁赛时段结束"
+            });
+            await db.SaveChangesAsync();
+        }
+        await Task.WhenAll(Process(now), Process(now));
+        await Process(now.AddSeconds(1));
+        using (var scope = factory.Services.CreateScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            Assert.Single(await db.GamePushDeliveries.Where(delivery => delivery.GameId == game.Id).ToArrayAsync());
+            await scope.ServiceProvider.GetRequiredService<GamePushDispatcher>().DispatchPendingAsync();
+        }
+        var sent = factory.NapCat.Requests.Select(request => JsonDocument.Parse(request.Body)).ToArray();
+        try
+        {
+            var request = Assert.Single(sent, json => json.RootElement.GetProperty("group_id").GetString() == "987650001");
+            Assert.Contains("最终禁赛时段结束", request.RootElement.GetProperty("message")[0].GetProperty("data").GetProperty("text").GetString());
+        }
+        finally { foreach (var json in sent) json.Dispose(); }
     }
 
     [Fact]

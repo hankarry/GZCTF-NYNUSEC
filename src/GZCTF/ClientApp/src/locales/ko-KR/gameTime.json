@@ -1,4 +1,9 @@
 {
+  "notify_blackout": "Publish start and end notifications",
+  "start_message": "Blackout start notification",
+  "end_message": "Blackout end notification",
+  "end_notify_description": "Each rule sends its own ending notification. Overlapping blackout periods continue to block answering until all have ended.",
+  "default_blackout_end_message": "This blackout period has ended. Check the contest page for the current competition status.",
   "tasks": "Scheduled tasks",
   "blackouts": "Blackout periods",
   "timezone": "All times use Beijing time (UTC+8).",

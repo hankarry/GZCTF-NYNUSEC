@@ -32,6 +32,8 @@ public class GameBlackout
     public int EndMinute { get; set; }
     public bool Notify { get; set; } = true;
     [MaxLength(4000)] public string Message { get; set; } = "非比赛时间段，暂停答题，已创建的容器将关闭。";
+    [MaxLength(4000)] public string EndMessage { get; set; } = "本次禁赛时段已结束，请查看赛事页面的最新比赛状态。";
     public DateTimeOffset? LastStartedAtUtc { get; set; }
+    public DateTimeOffset? PendingEndAtUtc { get; set; }
     public Game Game { get; set; } = null!;
 }

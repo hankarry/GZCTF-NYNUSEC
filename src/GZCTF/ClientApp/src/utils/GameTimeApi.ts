@@ -25,6 +25,7 @@ export interface BlackoutInput {
   endMinute: number
   notify: boolean
   message: string
+  endMessage: string
 }
 export interface BlackoutModel extends BlackoutInput {
   id: number

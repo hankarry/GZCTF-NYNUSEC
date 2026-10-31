@@ -67,6 +67,7 @@ export const GameTimeSettings = ({ gameId, kind }: { gameId: number; kind: 'task
     endMinute: 13 * 60,
     notify: true,
     message: t('gameTime.default_blackout_message'),
+    endMessage: t('gameTime.default_blackout_end_message'),
   })
   const [task, setTask] = useState(newTask)
   const [blackout, setBlackout] = useState(newBlackout)
@@ -263,13 +264,13 @@ export const GameTimeSettings = ({ gameId, kind }: { gameId: number; kind: 'task
               </>
             )}
             <Switch
-              label={t('gameTime.notify')}
+              label={t(isTask ? 'gameTime.notify' : 'gameTime.notify_blackout')}
               checked={draft.notify}
               disabled={busy}
               onChange={(e) => updateCommon({ notify: e.currentTarget.checked })}
             />
             <Textarea
-              label={t('gameTime.message')}
+              label={t(isTask ? 'gameTime.message' : 'gameTime.start_message')}
               description={t('gameTime.notify_description')}
               required={draft.notify}
               maxLength={4000}
@@ -279,6 +280,19 @@ export const GameTimeSettings = ({ gameId, kind }: { gameId: number; kind: 'task
               value={draft.message}
               onChange={(e) => updateCommon({ message: e.currentTarget.value })}
             />
+            {!isTask && (
+              <Textarea
+                label={t('gameTime.end_message')}
+                description={t('gameTime.end_notify_description')}
+                required={blackout.notify}
+                maxLength={4000}
+                autosize
+                minRows={2}
+                disabled={busy}
+                value={blackout.endMessage}
+                onChange={(e) => setBlackout({ ...blackout, endMessage: e.currentTarget.value })}
+              />
+            )}
             <Group justify="flex-end">
               <Button variant="default" disabled={busy} onClick={reset}>
                 {t('gameTime.reset')}
@@ -335,7 +349,13 @@ export const GameTimeSettings = ({ gameId, kind }: { gameId: number; kind: 'task
               )}
               {row.notify && (
                 <Text size="sm" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+                  {'endMessage' in row && `${t('gameTime.start_message')}：`}
                   {row.message}
+                </Text>
+              )}
+              {'endMessage' in row && row.notify && (
+                <Text size="sm" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+                  {t('gameTime.end_message')}：{row.endMessage}
                 </Text>
               )}
               <Group justify="flex-end">

@@ -597,6 +597,11 @@ namespace GZCTF.Migrations
                     b.Property<DateTimeOffset?>("EndAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("EndMessage")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
                     b.Property<int>("EndMinute")
                         .HasColumnType("integer");
 
@@ -618,6 +623,9 @@ namespace GZCTF.Migrations
 
                     b.Property<bool>("Notify")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("PendingEndAtUtc")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTimeOffset?>("StartAtUtc")
                         .HasColumnType("timestamp with time zone");

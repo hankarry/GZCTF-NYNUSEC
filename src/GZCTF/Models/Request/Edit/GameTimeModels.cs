@@ -39,6 +39,7 @@ public class BlackoutInput : IValidatableObject
     [Range(0, 1439)] public int EndMinute { get; set; }
     public bool Notify { get; set; } = true;
     [MaxLength(4000)] public string Message { get; set; } = "非比赛时间段，暂停答题，已创建的容器将关闭。";
+    [MaxLength(4000)] public string EndMessage { get; set; } = "本次禁赛时段已结束，请查看赛事页面的最新比赛状态。";
 
     public IEnumerable<ValidationResult> Validate(ValidationContext context)
     {
@@ -46,6 +47,7 @@ public class BlackoutInput : IValidatableObject
         if (!Daily && (StartAtUtc is null || EndAtUtc is null || StartAtUtc >= EndAtUtc))
             yield return new("禁赛结束时间必须晚于开始时间。");
         if (Notify && string.IsNullOrWhiteSpace(Message)) yield return new("通知内容不能为空。", [nameof(Message)]);
+        if (Notify && string.IsNullOrWhiteSpace(EndMessage)) yield return new("禁赛结束通知内容不能为空。", [nameof(EndMessage)]);
     }
 
     internal void Apply(GameBlackout rule)
@@ -53,6 +55,8 @@ public class BlackoutInput : IValidatableObject
         rule.Name = Name.Trim(); rule.Enabled = Enabled; rule.Daily = Daily;
         rule.StartAtUtc = Daily ? null : StartAtUtc?.ToUniversalTime(); rule.EndAtUtc = Daily ? null : EndAtUtc?.ToUniversalTime();
         rule.StartMinute = StartMinute; rule.EndMinute = EndMinute; rule.Notify = Notify; rule.Message = Message;
+        rule.EndMessage = EndMessage;
+        if (!Enabled) rule.PendingEndAtUtc = null;
     }
 }
 
@@ -64,10 +68,10 @@ public record ScheduledTaskModel(int Id, string Name, bool Enabled, bool AtGameS
 }
 
 public record BlackoutModel(int Id, string Name, bool Enabled, bool Daily, DateTimeOffset? StartAtUtc,
-    DateTimeOffset? EndAtUtc, int StartMinute, int EndMinute, bool Notify, string Message)
+    DateTimeOffset? EndAtUtc, int StartMinute, int EndMinute, bool Notify, string Message, string EndMessage)
 {
     internal static BlackoutModel From(GameBlackout rule) => new(rule.Id, rule.Name, rule.Enabled, rule.Daily, rule.StartAtUtc,
-        rule.EndAtUtc, rule.StartMinute, rule.EndMinute, rule.Notify, rule.Message);
+        rule.EndAtUtc, rule.StartMinute, rule.EndMinute, rule.Notify, rule.Message, rule.EndMessage);
 }
 
 public record GameTimeSettingsModel(ScheduledTaskModel[] Tasks, BlackoutModel[] Blackouts);

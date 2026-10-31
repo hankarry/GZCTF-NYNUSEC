@@ -5,13 +5,13 @@ namespace GZCTF.Services.Push;
 public class GamePushQueue(AppDbContext context)
 {
     /// <summary>Stage an outbox row; the caller saves it atomically with the notice.</summary>
-    public async Task EnqueueAsync(GameNotice notice, CancellationToken token = default)
+    public async Task EnqueueAsync(GameNotice notice, CancellationToken token = default, bool allowOutsideGame = false)
     {
         var config = await context.GamePushConfigs.AsNoTracking()
             .SingleOrDefaultAsync(config => config.GameId == notice.GameId && config.Enabled, token);
         if (config is null || !config.Includes(notice.Type)) return;
         var game = await context.Games.AsNoTracking().SingleAsync(game => game.Id == notice.GameId, token);
-        if (!game.IsActive) return;
+        if (!game.IsActive && !allowOutsideGame) return;
         context.GamePushDeliveries.Add(new()
         {
             GameId = notice.GameId, Notice = notice, Type = notice.Type, ConfigRevision = config.Revision,

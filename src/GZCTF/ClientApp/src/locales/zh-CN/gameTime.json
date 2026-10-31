@@ -1,4 +1,9 @@
 {
+  "notify_blackout": "发布通知（禁赛开始和结束）",
+  "start_message": "禁赛开始通知内容",
+  "end_message": "禁赛结束通知内容",
+  "end_notify_description": "各规则分别通知结束；如仍有其他禁赛时段生效，答题限制会继续保留。",
+  "default_blackout_end_message": "本次禁赛时段已结束，请查看赛事页面的最新比赛状态。",
   "tasks": "计划任务",
   "blackouts": "禁赛时间",
   "timezone": "所有时间均为北京时间（UTC+8）。",

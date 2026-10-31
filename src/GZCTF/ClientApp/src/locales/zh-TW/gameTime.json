@@ -1,4 +1,9 @@
 {
+  "notify_blackout": "發布通知（禁賽開始和結束）",
+  "start_message": "禁賽開始通知內容",
+  "end_message": "禁賽結束通知內容",
+  "end_notify_description": "各規則分別通知結束；若仍有其他禁賽時段生效，作答限制會繼續保留。",
+  "default_blackout_end_message": "本次禁賽時段已結束，請查看賽事頁面的最新比賽狀態。",
   "tasks": "計畫任務",
   "blackouts": "禁賽時間",
   "timezone": "所有時間均為北京時間（UTC+8）。",

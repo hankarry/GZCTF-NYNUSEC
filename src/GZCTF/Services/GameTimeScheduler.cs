@@ -1,5 +1,6 @@
 using GZCTF.Repositories.Interface;
 using GZCTF.Services.Cache;
+using GZCTF.Services.Push;
 using Microsoft.EntityFrameworkCore;
 
 namespace GZCTF.Services;
@@ -9,7 +10,7 @@ namespace GZCTF.Services;
 // 游戏时间调度器，执行游戏时间规则，包括定时任务和黑屏时间段。
 // </summary>
 public class GameTimeScheduler(AppDbContext db, IGameChallengeRepository challenges, IContainerRepository containers,
-    IGameNoticeRepository notices, CacheHelper cache, ILogger<GameTimeScheduler> logger)
+    IGameNoticeRepository notices, GamePushQueue pushQueue, CacheHelper cache, ILogger<GameTimeScheduler> logger)
 {
     public async Task ProcessAsync(DateTimeOffset now, CancellationToken token = default)
     {
@@ -36,14 +37,16 @@ public class GameTimeScheduler(AppDbContext db, IGameChallengeRepository challen
         // Execute blackout periods.
         // 执行黑屏时间。
         var rules = await db.GameBlackouts.AsNoTracking().Include(rule => rule.Game)
-            .Where(rule => rule.Enabled && rule.Game.StartTimeUtc <= now && rule.Game.EndTimeUtc > now).ToArrayAsync(token);
+            .Where(rule => rule.Enabled && rule.Game.StartTimeUtc <= now &&
+                (rule.Game.EndTimeUtc > now || rule.PendingEndAtUtc != null)).ToArrayAsync(token);
         var blockedGames = new HashSet<int>();
         foreach (var rule in rules)
         {
             var window = GameTimePolicy.Windows(rule, rule.Game, now).FirstOrDefault(window => window.Start <= now && now < window.End);
-            if (window is null) continue;
-            blockedGames.Add(rule.GameId);
-            try { await AnnounceBlackout(rule.Id, window.Start, now, token); }
+            if (window is not null) blockedGames.Add(rule.GameId);
+            if (window is null && rule.PendingEndAtUtc is null) continue;
+            if (window is not null && rule.LastStartedAtUtc == window.Start && rule.PendingEndAtUtc == window.End) continue;
+            try { await AnnounceBlackout(rule.Id, now, token); }
             catch (Exception exception) when (!token.IsCancellationRequested)
             {
                 logger.LogError(exception, "Failed to announce game blackout {RuleId}", rule.Id);
@@ -110,24 +113,64 @@ public class GameTimeScheduler(AppDbContext db, IGameChallengeRepository challen
     // Announces a blackout period if it has not been announced yet.
     // 如果尚未宣布黑屏时间段，则宣布该时间段。
     //</summary>
-    private async Task AnnounceBlackout(int id, DateTimeOffset start, DateTimeOffset now, CancellationToken token)
+    private async Task AnnounceBlackout(int id, DateTimeOffset now, CancellationToken token)
     {
         db.ChangeTracker.Clear();
         await using var transaction = await db.Database.BeginTransactionAsync(token);
         if (!await TryLock(-4, id, token)) return;
         var rule = await db.GameBlackouts.Include(rule => rule.Game).SingleOrDefaultAsync(rule => rule.Id == id, token);
-        if (rule is null || !rule.Enabled || rule.LastStartedAtUtc == start ||
-            !GameTimePolicy.Windows(rule, rule.Game, now).Any(window => window.Start == start && window.Start <= now && now < window.End)) return;
-        rule.LastStartedAtUtc = start;
-        GameNotice? notice = null;
-        if (rule.Notify)
+        if (rule is null || !rule.Enabled || rule.Game.StartTimeUtc > now) return;
+        var active = GameTimePolicy.Windows(rule, rule.Game, now)
+            .FirstOrDefault(window => window.Start <= now && now < window.End);
+        var published = new List<GameNotice>();
+
+        if (rule.PendingEndAtUtc.HasValue && rule.LastStartedAtUtc is { } previousStart)
         {
-            notice = new() { GameId = rule.GameId, Type = NoticeType.Normal, Values = [rule.Message], PublishTimeUtc = now };
-            await notices.AddNotice(notice, token, publish: false);
+            // Re-read the occurrence from the current configuration so extending or shortening a
+            // blackout while it is active also changes when its ending notification is sent.
+            var previous = GameTimePolicy.Windows(rule, rule.Game, previousStart)
+                .FirstOrDefault(window => window.Start == previousStart);
+            rule.PendingEndAtUtc = previous?.End;
+            if (previous is not null && previous.End <= now)
+            {
+                rule.PendingEndAtUtc = null;
+                // If a restart missed the gap and another daily occurrence is already active,
+                // consume the old end without sending a stale ending notification.
+                if (rule.Notify && active is null)
+                {
+                    var endNotice = new GameNotice
+                    {
+                        GameId = rule.GameId, Type = NoticeType.Normal,
+                        Values = [rule.EndMessage], PublishTimeUtc = now
+                    };
+                    await notices.AddNotice(endNotice, token, publish: false, enqueuePush: false);
+                    // A blackout may end at the same instant as the game itself.
+                    await pushQueue.EnqueueAsync(endNotice, token, allowOutsideGame: true);
+                    published.Add(endNotice);
+                }
+            }
         }
+
+        if (active is not null)
+        {
+            var newOccurrence = rule.LastStartedAtUtc != active.Start;
+            rule.LastStartedAtUtc = active.Start;
+            rule.PendingEndAtUtc = active.End;
+            if (rule.Notify && newOccurrence)
+            {
+                var startNotice = new GameNotice
+                {
+                    GameId = rule.GameId, Type = NoticeType.Normal,
+                    Values = [rule.Message], PublishTimeUtc = now
+                };
+                await notices.AddNotice(startNotice, token, publish: false);
+                published.Add(startNotice);
+            }
+        }
+
         await db.SaveChangesAsync(token);
         await transaction.CommitAsync(token);
-        if (notice is not null) await notices.PublishNotice(notice, token);
+        foreach (var notice in published) await notices.PublishNotice(notice, token);
     }
 }
 
