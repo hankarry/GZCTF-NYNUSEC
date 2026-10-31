@@ -32,6 +32,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) :
     public DbSet<GameNotice> GameNotices { get; set; } = null!;
     public DbSet<GamePushConfig> GamePushConfigs { get; set; } = null!;
     public DbSet<GamePushDelivery> GamePushDeliveries { get; set; } = null!;
+    public DbSet<GameScheduledTask> GameScheduledTasks { get; set; } = null!;
+    public DbSet<GameBlackout> GameBlackouts { get; set; } = null!;
     public DbSet<FlagContext> FlagContexts { get; set; } = null!;
     public DbSet<Participation> Participations { get; set; } = null!;
     public DbSet<GameInstance> GameInstances { get; set; } = null!;
@@ -63,6 +65,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) :
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.Entity<GameScheduledTask>().HasOne(task => task.Game).WithMany()
+            .HasForeignKey(task => task.GameId).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<GameScheduledTask>().HasIndex(task => new { task.Enabled, task.ExecutedAtUtc });
+        builder.Entity<GameBlackout>().HasOne(rule => rule.Game).WithMany()
+            .HasForeignKey(rule => rule.GameId).OnDelete(DeleteBehavior.Cascade);
+        builder.Entity<GameBlackout>().HasIndex(rule => new { rule.GameId, rule.Enabled });
 
         builder.Entity<ChoiceExam>().HasOne(e => e.Game).WithOne().HasForeignKey<ChoiceExam>(e => e.GameId);
         builder.Entity<ChoiceAttempt>().HasOne(e => e.Participation).WithOne()

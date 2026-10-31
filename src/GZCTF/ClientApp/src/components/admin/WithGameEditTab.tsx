@@ -6,6 +6,8 @@ import {
   mdiFlagOutline,
   mdiKeyboardBackspace,
   mdiMessageTextOutline,
+  mdiCalendarClock,
+  mdiCalendarRemove,
   mdiTagOutline,
   mdiTextBoxOutline,
 } from '@mdi/js'
@@ -47,6 +49,8 @@ export const WithGameEditTab: FC<GameEditTabProps> = ({
     { icon: mdiAccountGroupOutline, title: t('admin.tab.games.review'), path: 'review' },
     { icon: mdiFileDocumentCheckOutline, title: t('admin.tab.games.writeups'), path: 'writeups' },
     { icon: mdiMessageTextOutline, title: t('admin.tab.games.push'), path: 'push' },
+    { icon: mdiCalendarClock, title: t('gameTime.tasks'), path: 'schedule' },
+    { icon: mdiCalendarRemove, title: t('gameTime.blackouts'), path: 'blackouts' },
   ]
 
   const getTab = (path: string) => pages.find((page) => path.includes(page.path))

@@ -3,6 +3,7 @@ using GZCTF.Middlewares;
 using GZCTF.Models.Request.Game;
 using GZCTF.Repositories.Interface;
 using GZCTF.Services.Cache;
+using GZCTF.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ namespace GZCTF.Controllers;
 [RequireUser]
 [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class ChoiceController(AppDbContext db, UserManager<UserInfo> userManager,
-    IParticipationRepository participations, CacheHelper cache) : ControllerBase
+    IParticipationRepository participations, CacheHelper cache, GameTimePolicy timePolicy) : ControllerBase
 {
     [HttpGet("info")]
     public async Task<ActionResult<ChoiceExamInfoModel>> Info(int id, CancellationToken token)
@@ -160,6 +161,8 @@ public class ChoiceController(AppDbContext db, UserManager<UserInfo> userManager
             return (null, BadRequest(new RequestResponse("比赛已结束。")));
         if (!await db.ChoiceExams.AnyAsync(e => e.GameId == id && e.Enabled, token))
             return (null, NotFound(new RequestResponse("本场比赛未启用选择题。", 404)));
+        if (await timePolicy.IsBlockedAsync(id, token))
+            return (null, BadRequest(new RequestResponse(GameTimePolicy.BlockedMessage, GameTimePolicy.BlockedCode)));
         return (part, null);
     }
 }

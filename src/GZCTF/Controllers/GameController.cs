@@ -11,6 +11,7 @@ using GZCTF.Models.Request.Admin;
 using GZCTF.Models.Request.Game;
 using GZCTF.Repositories.Interface;
 using GZCTF.Services.Cache;
+using GZCTF.Services;
 using GZCTF.Services.Config;
 using GZCTF.Storage.Interface;
 using Microsoft.AspNetCore.Identity;
@@ -52,6 +53,7 @@ public class GameController(
     IGameInstanceRepository gameInstanceRepository,
     IParticipationRepository participationRepository,
     IOptionsSnapshot<ContainerPolicy> containerPolicy,
+    GameTimePolicy timePolicy,
     IStringLocalizer<Program> localizer) : ControllerBase
 {
     /// <summary>
@@ -744,7 +746,7 @@ public class GameController(
                 return StatusCode(StatusCodes.Status304NotModified);
         }
 
-        var context = await GetContextInfo(id, token: token);
+        var context = await GetContextInfo(id, token: token, denyDuringBlackout: false);
 
         if (context.Result is not null)
             return context.Result;
@@ -1029,6 +1031,8 @@ public class GameController(
 
             try
             {
+                if (await timePolicy.IsBlockedAsync(id, token))
+                    return BadRequest(new RequestResponse(GameTimePolicy.BlockedMessage, GameTimePolicy.BlockedCode));
                 submission = await submissionRepository.AddSubmission(submission, token);
                 await transaction.CommitAsync(token);
 
@@ -1242,8 +1246,14 @@ public class GameController(
             await containerRepository.DestroyContainer(instance.Container, token);
         }
 
-        return await gameInstanceRepository.CreateContainer(instance, context.Participation!.Team, context.User!,
-                context.Game!, token) switch
+        var result = await gameInstanceRepository.CreateContainer(instance, context.Participation!.Team, context.User!,
+            context.Game!, token);
+        if (result is (TaskStatus.Success, { } created) && await timePolicy.IsBlockedAsync(id, token))
+        {
+            await containerRepository.DestroyContainer(created, token);
+            return BadRequest(new RequestResponse(GameTimePolicy.BlockedMessage, GameTimePolicy.BlockedCode));
+        }
+        return result switch
         {
             null or (TaskStatus.Failed, null) => BadRequest(
                 new RequestResponse(localizer[nameof(Resources.Program.Game_ContainerCreationFailed)])),
@@ -1376,7 +1386,7 @@ public class GameController(
     }
 
     private async Task<ContextInfo> GetContextInfo(int id, bool denyAfterEnded = true,
-        CancellationToken token = default)
+        CancellationToken token = default, bool denyDuringBlackout = true)
     {
         ContextInfo res = new()
         {
@@ -1408,6 +1418,9 @@ public class GameController(
         if (denyAfterEnded && !res.Game.PracticeMode && res.Game.EndTimeUtc < DateTimeOffset.UtcNow)
             return res.WithResult(
                 BadRequest(new RequestResponse(localizer[nameof(Resources.Program.Game_Ended)], ErrorCodes.GameEnded)));
+
+        if (denyAfterEnded && denyDuringBlackout && await timePolicy.IsBlockedAsync(id, token))
+            return res.WithResult(BadRequest(new RequestResponse(GameTimePolicy.BlockedMessage, GameTimePolicy.BlockedCode)));
 
         return res;
     }

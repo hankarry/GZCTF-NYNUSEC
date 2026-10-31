@@ -174,7 +174,7 @@ export const ChallengeModal: FC<ChallengeModalProps> = (props) => {
             </Stack>
           )}
           {challenge.allowAI === false && (
-            <Alert color="yellow" mt="sm" icon={<Icon path={mdiAlertOutline} size={0.85} />}>
+            <Alert color="red" mt="sm" p="xs" icon={<Icon path={mdiAlertOutline} size={0.85} />}>
               {t('challenge.content.ai_policy_warning')}
             </Alert>
           )}

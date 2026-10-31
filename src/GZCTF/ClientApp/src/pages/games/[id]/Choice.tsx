@@ -17,6 +17,7 @@ import { modals } from '@mantine/modals'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
+import { GamePlayArea } from '@Components/GamePlayArea'
 import { WithGameTab } from '@Components/WithGameTab'
 import { WithNavBar } from '@Components/WithNavbar'
 import { WithRole } from '@Components/WithRole'
@@ -30,7 +31,9 @@ export default function Choice() {
     <WithNavBar width="90%">
       <WithRole requiredRole={Role.User}>
         <WithGameTab>
-          <ChoicePaper key={id} id={id} />
+          <GamePlayArea>
+            <ChoicePaper key={id} id={id} />
+          </GamePlayArea>
         </WithGameTab>
       </WithRole>
     </WithNavBar>

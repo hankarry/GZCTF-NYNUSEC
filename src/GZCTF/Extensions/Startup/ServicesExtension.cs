@@ -89,6 +89,8 @@ internal static class ServicesExtension
             builder.Services.AddScoped<GameImportService>();
             builder.Services.AddScoped<GamePushQueue>();
             builder.Services.AddScoped<GamePushDispatcher>();
+            builder.Services.AddScoped<GameTimePolicy>();
+            builder.Services.AddScoped<GameTimeScheduler>();
             // The durable outbox owns retries; HTTP-layer retries could duplicate QQ messages.
             builder.Services.AddHttpClient<NapCatClient>(client => client.Timeout = TimeSpan.FromSeconds(10))
                 .ConfigureAdditionalHttpMessageHandlers((handlers, _) =>
@@ -109,6 +111,7 @@ internal static class ServicesExtension
             builder.Services.AddHostedService<FlagChecker>();
             builder.Services.AddHostedService<CronJobService>();
             builder.Services.AddHostedService<GamePushWorker>();
+            builder.Services.AddHostedService<GameTimeWorker>();
         }
 
         internal void AddWebServices()

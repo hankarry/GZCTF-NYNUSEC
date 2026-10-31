@@ -2,6 +2,7 @@ import { Group, Stack } from '@mantine/core'
 import { FC } from 'react'
 import { ChallengePanel } from '@Components/ChallengePanel'
 import { GameNoticePanel } from '@Components/GameNoticePanel'
+import { GamePlayArea } from '@Components/GamePlayArea'
 import { TeamRank } from '@Components/TeamRank'
 import { WithGameTab } from '@Components/WithGameTab'
 import { WithNavBar } from '@Components/WithNavbar'
@@ -14,7 +15,13 @@ const Challenges: FC = () => {
       <WithRole requiredRole={Role.User}>
         <WithGameTab>
           <Group gap="sm" justify="space-between" align="flex-start" wrap="nowrap">
-            <ChallengePanel />
+            <Stack flex={1} miw={0}>
+              <GamePlayArea>
+                <Group gap="sm" align="flex-start" wrap="nowrap">
+                  <ChallengePanel />
+                </Group>
+              </GamePlayArea>
+            </Stack>
             <Stack gap="sm" miw="22rem" maw="22rem">
               <TeamRank />
               <GameNoticePanel />

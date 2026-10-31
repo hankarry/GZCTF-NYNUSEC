@@ -580,6 +580,58 @@ namespace GZCTF.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("GZCTF.Models.Data.GameBlackout", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Daily")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("EndAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("EndMinute")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("LastStartedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("Notify")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("StartAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("StartMinute")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId", "Enabled");
+
+                    b.ToTable("GameBlackouts");
+                });
+
             modelBuilder.Entity("GZCTF.Models.Data.GameChallenge", b =>
                 {
                     b.Property<int>("Id")
@@ -912,6 +964,62 @@ namespace GZCTF.Migrations
                     b.HasIndex("Status", "NextAttemptAtUtc");
 
                     b.ToTable("GamePushDeliveries");
+                });
+
+            modelBuilder.Entity("GZCTF.Models.Data.GameScheduledTask", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("AtGameStart")
+                        .HasColumnType("boolean");
+
+                    b.PrimitiveCollection<int[]>("ChallengeIds")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<bool>("EnableChallenges")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("ExecuteAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ExecutedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("Notify")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId");
+
+                    b.HasIndex("Enabled", "ExecutedAtUtc");
+
+                    b.ToTable("GameScheduledTasks");
                 });
 
             modelBuilder.Entity("GZCTF.Models.Data.LocalFile", b =>
@@ -1723,6 +1831,17 @@ namespace GZCTF.Migrations
                     b.Navigation("Exercise");
                 });
 
+            modelBuilder.Entity("GZCTF.Models.Data.GameBlackout", b =>
+                {
+                    b.HasOne("GZCTF.Models.Data.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
+                });
+
             modelBuilder.Entity("GZCTF.Models.Data.GameChallenge", b =>
                 {
                     b.HasOne("GZCTF.Models.Data.Attachment", "Attachment")
@@ -1851,6 +1970,17 @@ namespace GZCTF.Migrations
                     b.Navigation("Notice");
 
                     b.Navigation("Submission");
+                });
+
+            modelBuilder.Entity("GZCTF.Models.Data.GameScheduledTask", b =>
+                {
+                    b.HasOne("GZCTF.Models.Data.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("GZCTF.Models.Data.Participation", b =>
